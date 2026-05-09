@@ -12,6 +12,7 @@ const config: Config = {
         cyan: '#00bcd4',
         pale: '#bbdefb',
         offwhite: '#f0f8ff',
+        secondary: '#f0f8ff',
         gold: '#ffd700',
       },
       fontFamily: {
@@ -25,6 +26,8 @@ const config: Config = {
         float: 'float 4s ease-in-out infinite',
         'pulse-ring': 'pulseRing 2s ease-out infinite',
         marquee: 'marquee 20s linear infinite',
+        'logo-marquee': 'logoMarquee var(--slider-duration, 60s) linear infinite',
+        'logo-marquee-reverse': 'logoMarqueeReverse var(--slider-duration, 60s) linear infinite',
         fadeUp: 'fadeUp 0.6s ease-out forwards',
       },
       keyframes: {
@@ -43,6 +46,14 @@ const config: Config = {
         marquee: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
+        },
+        logoMarquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(calc(-50% - (var(--slider-gap, 42px) / 2)))' },
+        },
+        logoMarqueeReverse: {
+          '0%': { transform: 'translateX(calc(-50% - (var(--slider-gap, 42px) / 2)))' },
+          '100%': { transform: 'translateX(0)' },
         },
         fadeUp: {
           '0%': { opacity: '0', transform: 'translateY(40px)' },

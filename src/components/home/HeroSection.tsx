@@ -1,39 +1,21 @@
 import { ArrowRight, MessageCircle, ShieldCheck, Star } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { WaveDivider } from '@/components/ui/WaveDivider'
+import { WaterRippleImage } from '@/components/ui/water-ripple-image'
 import { COMPANY } from '@/data/constants'
 
 export function HeroSection() {
   return (
     <section className="relative min-h-[calc(100vh-80px)] overflow-hidden bg-gradient-to-br from-navy via-ocean to-[#0a2244] text-white">
-      <div className="hero-ocean-stage" aria-hidden="true">
-        <div className="hero-ocean-glow" />
-        <div className="hero-ocean-sunline" />
-        <div className="hero-ocean-splash">
-          <span className="splash-jet splash-jet-one" />
-          <span className="splash-jet splash-jet-two" />
-          <span className="splash-jet splash-jet-three" />
-          <span className="foam-ring foam-ring-one" />
-          <span className="foam-ring foam-ring-two" />
-        </div>
-        <div className="hero-droplets hero-droplets-back">
-          {Array.from({ length: 10 }).map((_, index) => <span key={`back-${index}`} />)}
-        </div>
-        <div className="hero-droplets hero-droplets-front">
-          {Array.from({ length: 14 }).map((_, index) => <span key={`front-${index}`} />)}
-        </div>
-        <div className="hero-mist">
-          {Array.from({ length: 9 }).map((_, index) => <span key={`mist-${index}`} />)}
-        </div>
-        <div className="hero-wave hero-wave-back" />
-        <div className="hero-wave hero-wave-mid" />
-        <div className="hero-wave hero-wave-front" />
-        <div className="hero-foam-lines">
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
+      <WaterRippleImage
+        blueish={0.4}
+        scale={7}
+        illumination={0.15}
+        surfaceDistortion={0.03}
+        waterDistortion={0.02}
+        src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=1600"
+      />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-navy/85 via-navy/55 to-navy/10" aria-hidden="true" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/20 via-transparent to-navy/45" aria-hidden="true" />
       <div className="container-pad grid min-h-[calc(100vh-80px)] items-center py-16">
         <div className="relative z-10 max-w-3xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-white/10 px-4 py-2 text-sm text-pale backdrop-blur">
@@ -56,9 +38,6 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-[200%] animate-wave-slow opacity-40"><WaveDivider color="#00bcd4" /></div>
-      <div className="absolute bottom-0 left-0 w-[200%] animate-wave-mid opacity-30"><WaveDivider color="#42a5f5" /></div>
-      <div className="absolute bottom-0 left-0 w-[200%] animate-wave-fast opacity-25"><WaveDivider color="#f0f8ff" /></div>
     </section>
   )
 }

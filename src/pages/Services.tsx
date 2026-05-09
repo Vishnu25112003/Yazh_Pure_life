@@ -5,6 +5,8 @@ import type { ElementType } from 'react'
 import { PageBanner } from '@/components/ui/PageBanner'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Button } from '@/components/ui/Button'
+import { LogoCloud } from '@/components/ui/logo-cloud'
+import { dealerBrandLogos } from '@/data/brandLogos'
 import { services } from '@/data/services'
 import { buildWhatsAppURL } from '@/utils/whatsapp'
 
@@ -36,6 +38,10 @@ export function Services() {
           <div className="mt-12 rounded-2xl bg-gradient-to-r from-ocean to-bright p-8 text-white shadow-card-hover">
             <h2 className="text-4xl font-bold">Need a Service?</h2>
             <p className="mt-3 text-pale">Reach Yazh Pure Life directly on WhatsApp for fast service support.</p>
+          </div>
+          <div className="mt-12">
+            <p className="mb-4 text-center text-sm font-semibold uppercase tracking-[0.18em] text-ocean/60">Brands We Service</p>
+            <LogoCloud logos={dealerBrandLogos} />
           </div>
         </div>
       </section>
