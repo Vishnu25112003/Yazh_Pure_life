@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Info, MessageCircle, Download, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { companyInfo } from "@/lib/data";
@@ -26,10 +26,38 @@ export interface Product {
 
 interface ProductCardProps {
   product: Product;
+  index?: number;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const [showInfo, setShowInfo] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const card = cardRef.current;
+
+    if (!card) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        rootMargin: "0px 0px -18% 0px",
+        threshold: 0.18,
+      }
+    );
+
+    observer.observe(card);
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent(
@@ -202,7 +230,13 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative overflow-hidden rounded-lg border border-slate-200 bg-[#f8fbfd] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-[0_18px_45px_rgba(15,56,84,0.14)]">
+      <div
+        ref={cardRef}
+        className={`product-reveal group relative overflow-hidden rounded-lg border border-slate-200 bg-[#f8fbfd] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-[0_18px_45px_rgba(15,56,84,0.14)] ${
+          isVisible ? "is-visible" : ""
+        }`}
+        style={{ transitionDelay: `${Math.min(index % 4, 3) * 90}ms` }}
+      >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-sky-100/70 to-transparent opacity-80" />
         <div className="pointer-events-none absolute -left-16 top-0 h-full w-12 rotate-12 bg-white/50 opacity-0 blur-sm transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100" />
 
@@ -212,6 +246,8 @@ export function ProductCard({ product }: ProductCardProps) {
           <img
             src={product.image}
             alt={product.name}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-contain p-4 drop-shadow-[0_12px_18px_rgba(15,23,42,0.13)] transition-transform duration-500 group-hover:scale-[1.035]"
           />
           <div className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-sky-800 shadow-sm ring-1 ring-sky-100">

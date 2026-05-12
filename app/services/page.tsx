@@ -15,12 +15,12 @@ import { Button } from "@/components/ui/button";
 import { companyInfo } from "@/lib/data";
 
 const services = [
-  { icon: Droplets, title: "Reverse Osmosis System", description: "Complete RO system installation and maintenance." },
-  { icon: Factory, title: "Industrial Water Treatment", description: "Large-scale industrial purification plants." },
-  { icon: Building2, title: "Commercial Water Treatment", description: "Office, school, and commercial sector solutions." },
-  { icon: Home, title: "Domestic RO Plant", description: "Home RO installation and repair." },
-  { icon: Settings, title: "Iron Remover Plant", description: "Specialized iron removal systems." },
-  { icon: Leaf, title: "Softener Plant", description: "Water softening solutions." },
+  { icon: Droplets, title: "Reverse Osmosis System", description: "Complete RO system installation and maintenance.", meta: "RO setup" },
+  { icon: Factory, title: "Industrial Water Treatment", description: "Large-scale industrial purification plants.", meta: "High volume" },
+  { icon: Building2, title: "Commercial Water Treatment", description: "Office, school, and commercial sector solutions.", meta: "Business use" },
+  { icon: Home, title: "Domestic RO Plant", description: "Home RO installation and repair.", meta: "Home service" },
+  { icon: Settings, title: "Iron Remover Plant", description: "Specialized iron removal systems.", meta: "Iron control" },
+  { icon: Leaf, title: "Softener Plant", description: "Water softening solutions.", meta: "Soft water" },
 ];
 
 const processSteps = [
@@ -68,21 +68,28 @@ export default function ServicesPage() {
               title="Comprehensive Services"
               description="Original service categories from Yazh Pure Life."
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {services.map((service, index) => (
                 <div
                   key={index}
-                  className="bg-card rounded-lg p-5 lg:p-6 border border-border hover:border-primary/20 hover:shadow-sm transition-all"
+                  className="home-soft-rise group relative overflow-hidden rounded-xl bg-white p-5 shadow-[0_12px_36px_rgba(15,56,84,0.08)] ring-1 ring-sky-100/80 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_54px_rgba(15,56,84,0.14)]"
+                  style={{ animationDelay: `${index * 80}ms` }}
                 >
-                  <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center mb-2">
-                    <service.icon className="w-4 h-4 text-primary" />
+                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500/0 via-sky-500/75 to-cyan-400/0 opacity-80" />
+                  <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-sky-100/70 blur-2xl transition-opacity duration-300 group-hover:opacity-95" />
+                  <div className="relative mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-sky-50 to-white shadow-inner ring-1 ring-sky-100 transition-transform duration-300 group-hover:scale-110">
+                    <service.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                  <p className="relative mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-700/75">
+                    {service.meta}
+                  </p>
+                  <h3 className="relative min-h-[2.5rem] text-sm font-semibold leading-snug text-foreground">
                     {service.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="relative mt-2 text-xs leading-relaxed text-muted-foreground">
                     {service.description}
                   </p>
+                  <div className="relative mt-4 h-1.5 w-14 rounded-full bg-gradient-to-r from-primary/40 to-accent/45 transition-all duration-300 group-hover:w-24" />
                 </div>
               ))}
             </div>
@@ -97,14 +104,30 @@ export default function ServicesPage() {
               title="Simple 4-Step Process"
               description="Getting started with Yazh Pure Life is easy."
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+            <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+              <div className="pointer-events-none absolute left-[12%] right-[12%] top-10 hidden h-px bg-gradient-to-r from-transparent via-sky-200 to-transparent lg:block" />
               {processSteps.map((step, index) => (
-                <div key={index} className="relative bg-card rounded-lg p-4 border border-border">
-                  <span className="text-3xl font-bold text-primary/20">{step.step}</span>
-                  <h3 className="text-sm font-semibold text-foreground mt-1">
+                <div
+                  key={index}
+                  className="home-soft-rise group relative rounded-xl bg-white p-5 shadow-[0_12px_36px_rgba(15,56,84,0.08)] ring-1 ring-sky-100/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_48px_rgba(15,56,84,0.13)]"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="relative z-10 mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-[0_10px_24px_rgba(15,56,84,0.18)] ring-4 ring-sky-50">
+                    {step.step}
+                  </div>
+                  <div className="absolute right-4 top-4 text-5xl font-bold leading-none text-sky-100 transition-colors duration-300 group-hover:text-sky-200">
+                    {step.step}
+                  </div>
+                  <h3 className="relative text-base font-semibold text-foreground">
                     {step.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-1">{step.description}</p>
+                  <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {step.description}
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-xs font-medium text-sky-700">
+                    <Check className="h-3.5 w-3.5" />
+                    Step {index + 1}
+                  </div>
                 </div>
               ))}
             </div>

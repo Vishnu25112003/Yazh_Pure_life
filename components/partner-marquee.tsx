@@ -60,11 +60,38 @@ export function PartnerMarquee() {
       </div>
 
       <div className="relative z-10 overflow-hidden py-3 [mask-image:linear-gradient(90deg,transparent,black_14%,black_86%,transparent)]">
-        <div className="flex animate-marquee items-center">
-          {[...partners, ...partners].map((partner, index) => (
+        <div className="flex w-max animate-marquee items-center">
+          <div className="flex items-center gap-14 pr-14 xl:gap-20 xl:pr-20">
+            {partners.map((partner) => (
+              <div
+                key={partner.name}
+                className="group flex min-w-36 flex-shrink-0 items-center gap-3 opacity-80 blur-[0.15px] transition-all duration-300 hover:opacity-100 hover:blur-0"
+              >
+                <div className="relative flex h-11 w-11 items-center justify-center">
+                  <span className="absolute inset-0 rounded-full bg-white/55 blur-md transition-opacity group-hover:opacity-100 opacity-70" />
+                  <span
+                    className={`relative flex h-9 w-9 items-center justify-center rounded-full bg-background/55 font-bold text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_8px_24px_rgba(15,23,42,0.08)] ${partner.className}`}
+                  >
+                    {partner.mark}
+                  </span>
+                </div>
+                <div className="min-w-24">
+                  <p className={`font-bold text-base leading-none ${partner.className}`}>
+                    {partner.name}
+                  </p>
+                  <p className="mt-1 text-[10px] text-muted-foreground/60 blur-[0.2px] group-hover:text-muted-foreground group-hover:blur-0">
+                    {partner.tagline}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-14 pr-14 xl:gap-20 xl:pr-20" aria-hidden="true">
+            {partners.map((partner) => (
             <div
-              key={index}
-              className="group flex-shrink-0 mx-7 xl:mx-10 flex items-center gap-3 opacity-80 blur-[0.15px] transition-all duration-300 hover:opacity-100 hover:blur-0"
+              key={`duplicate-${partner.name}`}
+              className="group flex min-w-36 flex-shrink-0 items-center gap-3 opacity-80 blur-[0.15px] transition-all duration-300 hover:opacity-100 hover:blur-0"
             >
               <div className="relative flex h-11 w-11 items-center justify-center">
                 <span className="absolute inset-0 rounded-full bg-white/55 blur-md transition-opacity group-hover:opacity-100 opacity-70" />
@@ -84,6 +111,7 @@ export function PartnerMarquee() {
               </div>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>

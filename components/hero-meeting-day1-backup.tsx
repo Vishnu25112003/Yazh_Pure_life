@@ -61,7 +61,7 @@ interface HeroMeetingProps {
 }
 
 export function HeroMeeting({
-  speed = 1,
+  speed = 1.18,
   dropCount = 52,
   waterColor = WATER_COLOR,
   bgColor = BG_COLOR,

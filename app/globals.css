@@ -390,7 +390,7 @@
 }
 
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 32s linear infinite;
 }
 
 .animate-fade-in-up {
@@ -399,6 +399,34 @@
 
 .animate-pulse-subtle {
   animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+.product-reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(0.99);
+  transition-property: opacity, transform, border-color, box-shadow;
+  transition-duration: 1100ms, 1100ms, 300ms, 300ms;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1), cubic-bezier(0.19, 1, 0.22, 1), ease, ease;
+  will-change: opacity, transform;
+}
+
+.product-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  will-change: auto;
+}
+
+.product-reveal.is-visible:hover {
+  transform: translate3d(0, -0.25rem, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
 }
 
 /* Smooth scrolling */

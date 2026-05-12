@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface GalleryImage {
@@ -16,6 +16,8 @@ interface GalleryGridProps {
 
 export function GalleryGrid({ images }: GalleryGridProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [visibleItems, setVisibleItems] = useState<Set<number>>(() => new Set());
+  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const openLightbox = (index: number) => setSelectedIndex(index);
   const closeLightbox = () => setSelectedIndex(null);
@@ -32,19 +34,64 @@ export function GalleryGrid({ images }: GalleryGridProps) {
     }
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          const index = Number((entry.target as HTMLElement).dataset.galleryIndex);
+          setVisibleItems((current) => {
+            if (current.has(index)) {
+              return current;
+            }
+
+            const next = new Set(current);
+            next.add(index);
+            return next;
+          });
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -18% 0px",
+        threshold: 0.18,
+      }
+    );
+
+    itemRefs.current.forEach((item) => {
+      if (item) {
+        observer.observe(item);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [images.length]);
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-5">
         {images.map((image, index) => (
           <div
             key={index}
-            className="group relative aspect-square overflow-hidden rounded-md cursor-pointer border border-primary/10 bg-[radial-gradient(circle_at_50%_28%,rgba(255,255,255,0.96)_0%,rgba(232,245,252,0.92)_48%,rgba(212,232,244,0.98)_100%)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
+            ref={(node) => {
+              itemRefs.current[index] = node;
+            }}
+            data-gallery-index={index}
+            className={`product-reveal group relative aspect-square overflow-hidden rounded-md cursor-pointer border border-primary/10 bg-[radial-gradient(circle_at_50%_28%,rgba(255,255,255,0.96)_0%,rgba(232,245,252,0.92)_48%,rgba(212,232,244,0.98)_100%)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg ${
+              visibleItems.has(index) ? "is-visible" : ""
+            }`}
+            style={{ transitionDelay: `${Math.min(index % 4, 3) * 90}ms` }}
             onClick={() => openLightbox(index)}
           >
             <div className="pointer-events-none absolute inset-x-8 bottom-4 h-8 rounded-full bg-water-deep/10 blur-xl" />
             <img
               src={image.src}
               alt={image.alt}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 h-full w-full object-contain p-3 drop-shadow-[0_12px_18px_rgba(15,23,42,0.14)] transition-transform duration-500 group-hover:scale-[1.02]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-water-deep/85 via-water-deep/18 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
