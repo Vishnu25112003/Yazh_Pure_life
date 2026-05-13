@@ -152,13 +152,13 @@ export function HeroMeeting({
       96%      { transform: scale(2.1); opacity: 0; }
       100%     { transform: scale(2.1); opacity: 0; }
     }
-    .ymA-l     { animation: ymA-l     ${cycle}s cubic-bezier(.55,.06,.32,1) infinite; transform-origin: ${cx}px ${cy}px; }
-    .ymA-r     { animation: ymA-r     ${cycle}s cubic-bezier(.55,.06,.32,1) infinite; transform-origin: ${cx}px ${cy}px; }
-    .ymA-burst { animation: ymA-burst ${cycle}s ease-out infinite; transform-origin: ${cx}px ${cy}px; transform-box: fill-box; }
-    .ymA-drop  { animation: ymA-drop  ${cycle}s cubic-bezier(.45,.05,.55,.95) infinite; transform-origin: ${cx}px ${cy}px; }
-    .ymA-drop-splash { animation: ymA-drop-splash ${cycle}s ease-out infinite; transform-origin: center; transform-box: fill-box; }
-    .ymA-pool  { animation: ymA-pool  ${cycle}s ease-in-out infinite; transform-origin: ${cx}px ${H - 50}px; }
-    .ymA-ripple{ animation: ymA-ripple ${cycle}s ease-out infinite; transform-origin: center; transform-box: fill-box; }
+    .ymA-l     { animation: ymA-l     ${cycle}s cubic-bezier(.55,.06,.32,1) forwards; transform-origin: ${cx}px ${cy}px; }
+    .ymA-r     { animation: ymA-r     ${cycle}s cubic-bezier(.55,.06,.32,1) forwards; transform-origin: ${cx}px ${cy}px; }
+    .ymA-burst { animation: ymA-burst ${cycle}s ease-out forwards; transform-origin: ${cx}px ${cy}px; transform-box: fill-box; }
+    .ymA-drop  { animation: ymA-drop  ${cycle}s cubic-bezier(.45,.05,.55,.95) forwards; transform-origin: ${cx}px ${cy}px; }
+    .ymA-drop-splash { animation: ymA-drop-splash ${cycle}s ease-out forwards; transform-origin: center; transform-box: fill-box; }
+    .ymA-pool  { animation: ymA-pool  ${cycle}s ease-in-out forwards; transform-origin: ${cx}px ${H - 50}px; }
+    .ymA-ripple{ animation: ymA-ripple ${cycle}s ease-out forwards; transform-origin: center; transform-box: fill-box; }
   `;
 
   return (

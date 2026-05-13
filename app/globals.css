@@ -145,11 +145,11 @@
 
 @keyframes home-shine {
   0% {
-    transform: translateX(-120%) rotate(12deg);
+    transform: translateX(-130%) rotate(12deg);
   }
-  45%,
+  55%,
   100% {
-    transform: translateX(260%) rotate(12deg);
+    transform: translateX(460%) rotate(12deg);
   }
 }
 
@@ -181,8 +181,8 @@
   content: "";
   position: absolute;
   inset-block: -30%;
-  left: -35%;
-  width: 22%;
+  left: -42%;
+  width: 32%;
   background: linear-gradient(
     90deg,
     transparent,
@@ -190,6 +190,8 @@
     transparent
   );
   filter: blur(1px);
+  pointer-events: none;
+  will-change: transform;
   animation: home-shine 5.6s ease-in-out infinite;
 }
 
