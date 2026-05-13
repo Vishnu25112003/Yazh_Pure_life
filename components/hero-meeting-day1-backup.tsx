@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const WATER_COLOR = "#3b9bd9";
 const BG_COLOR = "#f4f8fc";
+const DEFAULT_DROP_COUNT = 24;
 
 function mulberry32(seed: number) {
   return function () {
@@ -31,7 +32,7 @@ function GooDefs({ id, color }: { id: string; color: string }) {
   return (
     <defs>
       <filter id={id} x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur in="SourceGraphic" stdDeviation={9} result="b" />
+        <feGaussianBlur in="SourceGraphic" stdDeviation={6} result="b" />
         <feColorMatrix
           in="b"
           mode="matrix"
@@ -62,7 +63,7 @@ interface HeroMeetingProps {
 
 export function HeroMeeting({
   speed = 1.18,
-  dropCount = 52,
+  dropCount = DEFAULT_DROP_COUNT,
   waterColor = WATER_COLOR,
   bgColor = BG_COLOR,
 }: HeroMeetingProps) {
@@ -92,7 +93,7 @@ export function HeroMeeting({
 
   const tail = useMemo(
     () =>
-      Array.from({ length: 8 }, (_, i) => ({
+      Array.from({ length: 6 }, (_, i) => ({
         i,
         off: i * 38,
         size: 6 + rand() * 8,
@@ -155,10 +156,10 @@ export function HeroMeeting({
     .ymA-l     { animation: ymA-l     ${cycle}s cubic-bezier(.55,.06,.32,1) forwards; transform-origin: ${cx}px ${cy}px; }
     .ymA-r     { animation: ymA-r     ${cycle}s cubic-bezier(.55,.06,.32,1) forwards; transform-origin: ${cx}px ${cy}px; }
     .ymA-burst { animation: ymA-burst ${cycle}s ease-out forwards; transform-origin: ${cx}px ${cy}px; transform-box: fill-box; }
-    .ymA-drop  { animation: ymA-drop  ${cycle}s cubic-bezier(.45,.05,.55,.95) forwards; transform-origin: ${cx}px ${cy}px; }
-    .ymA-drop-splash { animation: ymA-drop-splash ${cycle}s ease-out forwards; transform-origin: center; transform-box: fill-box; }
-    .ymA-pool  { animation: ymA-pool  ${cycle}s ease-in-out forwards; transform-origin: ${cx}px ${H - 50}px; }
-    .ymA-ripple{ animation: ymA-ripple ${cycle}s ease-out forwards; transform-origin: center; transform-box: fill-box; }
+    .ymA-drop  { animation: ymA-drop  ${cycle}s cubic-bezier(.45,.05,.55,.95) forwards; transform-origin: ${cx}px ${cy}px; will-change: transform, opacity; }
+    .ymA-drop-splash { animation: ymA-drop-splash ${cycle}s ease-out forwards; transform-origin: center; transform-box: fill-box; will-change: transform, opacity; }
+    .ymA-pool  { animation: ymA-pool  ${cycle}s ease-in-out forwards; transform-origin: ${cx}px ${H - 50}px; will-change: transform, opacity; }
+    .ymA-ripple{ animation: ymA-ripple ${cycle}s ease-out forwards; transform-origin: center; transform-box: fill-box; will-change: transform, opacity; }
   `;
 
   return (
@@ -241,7 +242,7 @@ export function HeroMeeting({
           />
 
           {/* Settled pool */}
-          <g className="ymA-pool" style={{ filter: "url(#ymA-goo)" }}>
+          <g className="ymA-pool">
             <path
               d={`M 0 ${H - 70} Q ${W * 0.15} ${H - 90}, ${W * 0.3} ${H - 70} T ${W * 0.6} ${H - 70} T ${W * 0.9} ${H - 70} T ${W} ${H - 70} L ${W} ${H} L 0 ${H} Z`}
               fill={`url(#ymA-goo-grad)`}
@@ -266,7 +267,7 @@ export function HeroMeeting({
             />
           ))}
 
-          {/* Streams + burst + droplets — goo group */}
+          {/* Streams + burst use the goo filter; droplets stay unfiltered for smoother spreading. */}
           <g style={{ filter: "url(#ymA-goo)" }}>
             {/* Left stream */}
             <g className="ymA-l">
@@ -300,8 +301,10 @@ export function HeroMeeting({
 
             {/* Burst at impact */}
             <circle className="ymA-burst" cx={cx} cy={cy} r="60" fill={waterColor} />
+          </g>
 
-            {/* Droplets */}
+          {/* Droplets */}
+          <g>
             {drops.map((d) => (
               <circle
                 key={d.i}
@@ -325,7 +328,7 @@ export function HeroMeeting({
 
           {/* Small bottom splashes when droplets reach the lower screen. */}
           <g>
-            {drops.map((d) => (
+            {drops.filter((_, index) => index % 3 === 0).map((d) => (
               <ellipse
                 key={`splash-${d.i}`}
                 cx={d.ex}
