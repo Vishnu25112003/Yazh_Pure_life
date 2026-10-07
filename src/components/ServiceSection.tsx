@@ -1,5 +1,4 @@
 import { FormEvent, useState } from "react";
-import { submitServiceRequest } from "../api";
 import { waLink } from "../data";
 import { ChevronRightIcon, DropletIcon, WrenchIcon } from "./icons";
 
@@ -36,10 +35,6 @@ export function ServiceSection() {
       setErrors(nextErrors);
       return;
     }
-
-    submitServiceRequest({ name, phone, customerId, address, complaint }).catch((err) => {
-      console.error("Could not save service request", err);
-    });
 
     const message = `New service request from website:\nName: ${name.trim()}\nMobile: ${phone.trim()}\nCustomer ID: ${customerId.trim()}\nAddress: ${address.trim()}\nComplaint: ${complaint.trim()}`;
     window.open(waLink(message), "_blank");
