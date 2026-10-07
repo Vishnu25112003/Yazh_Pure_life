@@ -1,0 +1,120 @@
+// Demo content for Yazh Pure Life — replace with real client data when confirmed.
+
+export const CONTACT = {
+  phone: "+91 98765 43210",
+  phoneDisplay: "98765 43210",
+  whatsapp: "919876543210",
+  email: "info@yazhpurelife.in",
+  address: "No. 12, Anna Nagar Main Road, Kolathur, Chennai - 600099",
+  hours: "Mon – Sat, 9:00 AM – 8:00 PM",
+  mycrd: "https://mycrd.in/yazh-pure-life-1",
+};
+
+export const BRANCHES = [
+  {
+    name: "Kolathur (Head office)",
+    address: "No. 12, Anna Nagar Main Road, Kolathur, Chennai - 600099",
+    mapsUrl: "https://maps.google.com/?q=Kolathur+Chennai",
+  },
+  {
+    name: "Tada",
+    address: "Plot 5, GST Road, Tada, Tamil Nadu - 631151",
+    mapsUrl: "https://maps.google.com/?q=Tada+Tamil+Nadu",
+  },
+];
+
+export const REVIEWS = {
+  rating: 4.8,
+  count: "1,000+",
+  url: "https://maps.google.com",
+  items: [
+    {
+      initials: "RS",
+      name: "R. Saravanan",
+      text: "Quick service and honest pricing. Technician explained everything before starting work.",
+      tint: "accent" as const,
+    },
+    {
+      initials: "PM",
+      name: "Priya M.",
+      text: "Been using their AMC for years. Always on time and genuine spares.",
+      tint: "accent2" as const,
+    },
+    {
+      initials: "KR",
+      name: "Karthik R.",
+      text: "Good response on WhatsApp, installed the same day I called.",
+      tint: "accent" as const,
+    },
+  ],
+};
+
+export const DOMESTIC_PRODUCTS = [
+  { id: "ypl-dolphin", label: "YPL Dolphin", spec: "RO · 5 stage · 9 L tank", src: "/assets/domestic/ypl-dolphin.webp" },
+  { id: "ypl-lily", label: "YPL Lily", spec: "RO + Minerals · 5 stage · 10 L", src: "/assets/domestic/ypl-lily.webp" },
+  { id: "ypl-aqua-2090", label: "YPL Aqua 2090", spec: "RO + Minerals · 5 stage · 10 L", src: "/assets/domestic/ypl-aqua-2090.webp" },
+  { id: "ypl-pure-x", label: "YPL Pure X", spec: "RO + Alkaline · 6 stage · 10 L", src: "/assets/domestic/ypl-pure-x.webp" },
+  { id: "ypl-mirage", label: "YPL Mirage", spec: "RO + UV + Alkaline · 7 stage · 12 L", src: "/assets/domestic/ypl-mirage.webp" },
+  { id: "ypl-emira", label: "YPL Emira", spec: "RO + Alkaline + Tank UV · 7 stage · 10 L", src: "/assets/domestic/ypl-emira.webp" },
+  { id: "livepure", label: "Livepure / P & A", spec: "RO + UV · 6 stage · 8 L · ISI", src: "/assets/domestic/livepure.webp" },
+  { id: "ypl-sky", label: "YPL Sky", spec: "RO + UV + Minerals · 7 stage · SS tank", src: "/assets/domestic/ypl-sky.webp" },
+  { id: "g-series-vocue", label: "G-Series Vocue", spec: "RO + Alkaline + Zn + UV · 8 stage · ISI", src: "/assets/domestic/g-series-vocue.webp" },
+  { id: "prolife-fiesta", label: "Prolife Fiesta", spec: "RO + UV + UF + Copper · 10 stage · ISI", src: "/assets/domestic/prolife-fiesta.webp" },
+  { id: "undersink-ro", label: "Under-sink RO", spec: "RO + UV + Alkaline + UF · 8 stage · ISI", src: "/assets/domestic/undersink-ro.webp" },
+  { id: "ypl-purelife-hot-cold", label: "YPL Purelife Hot & Cold", spec: "RO · Hot, cold & normal water", src: "/assets/domestic/ypl-purelife-hot-cold.webp" },
+  { id: "ypl-whale-25", label: "YPL Whale 25", spec: "RO · 5 stage · 25 L tank", src: "/assets/domestic/ypl-whale-25.webp" },
+];
+
+export const COMMERCIAL = [
+  { id: "c-comm-250", label: "Commercial RO 250 LPH", spec: "6 stages · 100 L tank · restaurant, office, hostel", src: "/assets/commercial/ro-250-lph.webp" },
+  { id: "c-comm-500", label: "Commercial RO 500 LPH", spec: "7 stages · 200 L tank · school, hospital, canteen", src: "/assets/commercial/ro-500-lph.webp" },
+  { id: "c-comm-1000", label: "Commercial RO 1000 LPH", spec: "8 stages · 500 L tank · apartments, industrial", src: "/assets/commercial/ro-1000-lph.webp" },
+  { id: "c-comm-steel-frame", label: "Steel-frame RO plant", spec: "Compact SS frame · shops, clinics, offices", src: "/assets/commercial/ro-steel-frame.webp" },
+  { id: "c-comm-booster-pump", label: "RO plant with booster pump", spec: "Pressure vessels + pump · hotels, factories", src: "/assets/commercial/ro-booster-pump.webp" },
+  { id: "c-comm-frp-vessel", label: "FRP vessel RO plant", spec: "High-capacity FRP vessels · industry, apartments", src: "/assets/commercial/ro-frp-vessel.webp" },
+];
+
+export const IRON_REMOVER = [
+  {
+    id: "ir-auto",
+    name: "Automatic",
+    description: "Self-backwashing, low maintenance",
+    startingPrice: "₹18,500",
+  },
+  {
+    id: "ir-manual",
+    name: "Manual",
+    description: "Lower cost, manual backwash",
+    startingPrice: "₹12,500",
+  },
+];
+
+export const WATER_SOFTENER = [
+  {
+    id: "ws-auto",
+    name: "Automatic",
+    description: "Self-regenerating resin bed",
+    startingPrice: "₹21,500",
+  },
+  {
+    id: "ws-manual",
+    name: "Manual",
+    description: "Lower cost, manual regeneration",
+    startingPrice: "₹15,500",
+  },
+];
+
+export const WHY_CHOOSE_US = [
+  { title: "Since 2009", body: "Serving Chennai since 2009", tint: "accent" as const },
+  { title: "All brands", body: "Kent, Aquaguard, LG, Whirlpool and more", tint: "accent2" as const },
+  { title: "Genuine spares", body: "Genuine spares only, every time", tint: "accent" as const },
+  { title: "AMC available", body: "Annual maintenance packages available", tint: "accent2" as const },
+];
+
+export function waLink(message: string): string {
+  return `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
+}
+
+export function telLink(): string {
+  return `tel:${CONTACT.phone.replace(/\s/g, "")}`;
+}
