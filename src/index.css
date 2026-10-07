@@ -392,146 +392,6 @@ textarea.input {
   text-decoration: none;
 }
 
-/* — iron remover / water softener panels — */
-/* mobile: stacked · desktop: iron remover left, water softener right */
-.solution-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-8);
-  align-items: stretch;
-}
-@media (min-width: 900px) {
-  .solution-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-6);
-  }
-}
-.solution-panel {
-  --sol-500: var(--color-accent-500);
-  --sol-700: var(--color-accent-700);
-  --sol-100: var(--color-accent-100);
-  --sol-200: var(--color-accent-200);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  border-radius: 16px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-}
-.solution-accent2 {
-  --sol-500: var(--color-accent-2-500);
-  --sol-700: var(--color-accent-2-700);
-  --sol-100: var(--color-accent-2-100);
-  --sol-200: var(--color-accent-2-200);
-}
-.solution-head {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 18px 20px;
-  background: linear-gradient(135deg, var(--sol-100), var(--color-surface));
-  border-bottom: 1px solid var(--sol-200);
-}
-.solution-head-icon {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--sol-500), var(--sol-700));
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--sol-700) 30%, transparent);
-}
-.solution-head-intro {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.45;
-  color: color-mix(in srgb, var(--color-text) 75%, transparent);
-}
-.solution-head-sub {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--sol-700);
-}
-.solution-list {
-  display: grid;
-}
-.solution-option {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas:
-    "icon info price"
-    "icon actions actions";
-  align-items: center;
-  column-gap: 14px;
-  row-gap: 12px;
-  padding: 18px 20px;
-}
-.solution-option + .solution-option {
-  border-top: 1px dashed var(--color-divider);
-}
-.solution-option-icon {
-  grid-area: icon;
-  align-self: start;
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  color: var(--sol-700);
-  background: var(--sol-100);
-  border: 1px solid var(--sol-200);
-}
-.solution-option-icon.is-auto {
-  color: #ffffff;
-  background: var(--sol-500);
-  border-color: transparent;
-}
-.solution-option-info {
-  grid-area: info;
-  min-width: 0;
-}
-.solution-option-name {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 19px;
-  line-height: 1.2;
-}
-.solution-option-desc {
-  margin: 2px 0 0;
-  font-size: 13.5px;
-  color: color-mix(in srgb, var(--color-text) 72%, transparent);
-}
-.solution-option-price {
-  grid-area: price;
-  display: grid;
-  justify-items: end;
-  text-align: right;
-}
-.solution-price-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
-}
-.solution-price-value {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 1.1;
-  color: var(--sol-700);
-}
-.solution-option-actions {
-  grid-area: actions;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 /* — site header —
    desktop: the logo bar scrolls away, the navbar stays pinned at the top
    mobile: the whole header hides on scroll down and returns on scroll up */
@@ -644,7 +504,7 @@ textarea.input {
   stroke-width: 2;
 }
 
-/* — gallery: right-to-left auto-scrolling photo strip + lightbox — */
+/* — gallery: left-to-right auto-scrolling photo strip + lightbox — */
 .gallery {
   display: grid;
   gap: var(--space-4);
@@ -673,7 +533,7 @@ textarea.input {
   gap: 14px;
   width: max-content;
   padding: 0 7px;
-  animation: gallery-scroll 92s linear infinite;
+  animation: gallery-scroll 92s linear infinite reverse;
 }
 .gallery-viewport:hover .gallery-track,
 .gallery-viewport:focus-within .gallery-track {

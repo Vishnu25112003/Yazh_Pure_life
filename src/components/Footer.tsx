@@ -119,8 +119,7 @@ export function Footer() {
           <nav className="footer-links" aria-label="Footer">
             <a href="#top"><span className="ypl-shine">Home</span></a>
             <a href="#commercial"><span className="ypl-shine">Commercial</span></a>
-            <a href="#iron-remover"><span className="ypl-shine">Iron Remover</span></a>
-            <a href="#water-softener"><span className="ypl-shine">Water Softener</span></a>
+            <a href="#dispenser"><span className="ypl-shine">Dispenser</span></a>
             <a href="#gallery"><span className="ypl-shine">Gallery</span></a>
             <a href={CONTACT.mycrd} target="_blank" rel="noopener">
               <span className="ypl-shine">Digital card</span>

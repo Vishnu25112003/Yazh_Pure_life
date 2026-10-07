@@ -68,34 +68,15 @@ export const COMMERCIAL = [
   { id: "c-comm-frp-vessel", label: "FRP vessel RO plant", spec: "High-capacity FRP vessels · industry, apartments", src: "/assets/commercial/ro-frp-vessel.webp" },
 ];
 
-export const IRON_REMOVER = [
-  {
-    id: "ir-auto",
-    name: "Automatic",
-    description: "Self-backwashing, low maintenance",
-    startingPrice: "₹18,500",
-  },
-  {
-    id: "ir-manual",
-    name: "Manual",
-    description: "Lower cost, manual backwash",
-    startingPrice: "₹12,500",
-  },
-];
-
-export const WATER_SOFTENER = [
-  {
-    id: "ws-auto",
-    name: "Automatic",
-    description: "Self-regenerating resin bed",
-    startingPrice: "₹21,500",
-  },
-  {
-    id: "ws-manual",
-    name: "Manual",
-    description: "Lower cost, manual regeneration",
-    startingPrice: "₹15,500",
-  },
+// YPL Purelife is the catalogue photo; the rest are illustrations in /assets/dispenser — swap in real photos when available.
+export const DISPENSERS = [
+  { id: "d-table-top-hot-normal", label: "Table-top Dispenser", spec: "Hot & normal · bottle-top loading", src: "/assets/dispenser/d-table-top-hot-normal.svg" },
+  { id: "d-floor-hot-cold", label: "Floor-standing Hot & Cold", spec: "Hot, cold & normal · 20 L bottle", src: "/assets/dispenser/d-floor-hot-cold.svg" },
+  { id: "d-bottom-load", label: "Bottom-load Dispenser", spec: "Hot, cold & normal · hidden bottle bay", src: "/assets/dispenser/d-bottom-load.svg" },
+  { id: "d-ypl-purelife-hot-cold", label: "YPL Purelife Hot & Cold", spec: "Built-in RO · hot, cold & normal · no bottles", src: "/assets/domestic/ypl-purelife-hot-cold.webp" },
+  { id: "d-ss-cooler-40", label: "SS Water Cooler 40 L", spec: "Stainless steel · 2 taps · offices, schools", src: "/assets/dispenser/d-ss-cooler-40.svg" },
+  { id: "d-ss-cooler-80", label: "SS Water Cooler 80 L", spec: "Stainless steel · 3 taps · factories, hostels", src: "/assets/dispenser/d-ss-cooler-80.svg" },
+  { id: "d-ss-cooler-ro-150", label: "SS Cooler + RO 150 L", spec: "Built-in RO · 4 taps · canteens, hospitals", src: "/assets/dispenser/d-ss-cooler-ro-150.svg" },
 ];
 
 // Product photos from the Yazh Pure Life e-catalogue (mycrd.in/yazh-pure-life-1)

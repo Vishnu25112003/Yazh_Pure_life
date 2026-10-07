@@ -24,7 +24,7 @@ export function GallerySection() {
     };
   }, [openIndex]);
 
-  // Two copies of the list make the right-to-left loop seamless.
+  // Two copies of the list make the left-to-right loop seamless.
   const loop = [...GALLERY, ...GALLERY];
 
   return (

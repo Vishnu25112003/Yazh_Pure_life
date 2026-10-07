@@ -1,15 +1,14 @@
 import { CommercialSection } from "./components/CommercialSection";
 import { ConsultationCta } from "./components/ConsultationCta";
+import { DispenserSection } from "./components/DispenserSection";
 import { DomesticSection } from "./components/DomesticSection";
 import { Footer } from "./components/Footer";
 import { GallerySection } from "./components/GallerySection";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
-import { IronRemoverSection } from "./components/IronRemoverSection";
 import { MobileBottomBar } from "./components/MobileBottomBar";
 import { ReviewsSection } from "./components/ReviewsSection";
 import { ServiceSection } from "./components/ServiceSection";
-import { WaterSoftenerSection } from "./components/WaterSoftenerSection";
 import { WhyChooseUs } from "./components/WhyChooseUs";
 
 export default function App() {
@@ -22,10 +21,7 @@ export default function App() {
         <DomesticSection />
         <ServiceSection />
         <CommercialSection />
-        <div className="solution-grid">
-          <IronRemoverSection />
-          <WaterSoftenerSection />
-        </div>
+        <DispenserSection />
         <GallerySection />
       </main>
 

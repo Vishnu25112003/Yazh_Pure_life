@@ -6,8 +6,7 @@ const NAV_LINKS = [
   { href: "/", label: "Home", current: true },
   { href: "https://mycrd.in/yazh-pure-life-1", label: "Domestic", external: true },
   { href: "#commercial", label: "Commercial" },
-  { href: "#iron-remover", label: "Iron Remover" },
-  { href: "#water-softener", label: "Water Softener" },
+  { href: "#dispenser", label: "Dispenser" },
   { href: "#gallery", label: "Gallery" },
 ];
 
