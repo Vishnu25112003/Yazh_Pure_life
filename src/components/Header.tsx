@@ -65,7 +65,7 @@ export function Header() {
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener" : undefined}
               >
-                {link.label}
+                <span className="ypl-shine">{link.label}</span>
               </a>
             ))}
             <span className="ml-auto flex gap-[var(--space-2)]">
@@ -124,7 +124,7 @@ export function Header() {
                 rel={link.external ? "noopener" : undefined}
                 onClick={() => setMenuOpen(false)}
               >
-                {link.label}
+                <span className="ypl-shine">{link.label}</span>
               </a>
             ))}
           </nav>

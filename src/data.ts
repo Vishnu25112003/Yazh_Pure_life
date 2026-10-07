@@ -12,14 +12,34 @@ export const CONTACT = {
 
 export const BRANCHES = [
   {
-    name: "Kolathur (Head office)",
-    address: "No. 12, Anna Nagar Main Road, Kolathur, Chennai - 600099",
-    mapsUrl: "https://maps.google.com/?q=Kolathur+Chennai",
+    name: "Kolathur",
+    tag: "Head office",
+    address: "No: 8/1, Valliyammai Nagar Main Road, Ponniammanmedu, Kolathur, Chennai, Tamil Nadu 600110",
+    mapsUrl:
+      "https://www.google.com/maps/place/Yazh+Pure+Life/@13.1354145,80.2242052,17z/data=!3m1!4b1!4m6!3m5!1s0x3a52656a42fd94ad:0x64158d16a998956f!8m2!3d13.1354145!4d80.2242052!16s%2Fg%2F11zfjlk63t?entry=ttu&g_ep=EgoyMDI2MTAwNC4wIKXMDSoASAFQAw%3D%3D",
   },
   {
     name: "Tada",
-    address: "Plot 5, GST Road, Tada, Tamil Nadu - 631151",
-    mapsUrl: "https://maps.google.com/?q=Tada+Tamil+Nadu",
+    tag: "Branch",
+    address: "No: 1-217, Kalahasti Road, Tada Khandrika, Tada, Andhra Pradesh 524401",
+    mapsUrl:
+      "https://www.google.com/maps/place/Yazh+Pure+Life/@13.1354145,80.2242052,17z/data=!3m1!4b1!4m6!3m5!1s0x3a52656a42fd94ad:0x64158d16a998956f!8m2!3d13.1354145!4d80.2242052!16s%2Fg%2F11zfjlk63t?entry=ttu&g_ep=EgoyMDI2MTAwNC4wIKXMDSoASAFQAw%3D%3D",
+  },
+  {
+    name: "Avadi",
+    tag: "Branch",
+    address:
+      "No: 11-1, Pillayar Kovil Street, North Main Road, Govardanagiri, Srinivasa Nagar, Avadi, Tamil Nadu 600071",
+    mapsUrl:
+      "https://www.google.com/maps/place/YAZH+PURE+LIFE/@13.0969788,80.1094743,17z/data=!3m1!4b1!4m6!3m5!1s0x3a5263bae73fc1b7:0xa41d1297123685be!8m2!3d13.0969788!4d80.1094743!16s%2Fg%2F11ys4gn8jq?entry=ttu&g_ep=EgoyMDI2MTAwNC4wIKXMDSoASAFQAw%3D%3D",
+  },
+  {
+    name: "Kolathur – Teacher's Colony",
+    tag: "Sales & service",
+    address:
+      "No: 19, Kadappa Road, 3rd Layout, Venkateshwara Nagar, Teacher's Colony, Kolathur, Chennai, Tamil Nadu 600099",
+    mapsUrl:
+      "https://www.google.com/maps/place/Yazh+pure+life+water+purifier+sales+and+service/@13.1307136,80.2026015,17z/data=!3m1!4b1!4m6!3m5!1s0x3a52648b6f365d05:0xecf1af6fdd8990bc!8m2!3d13.1307136!4d80.2026015!16s%2Fg%2F11bxf_w77t?entry=ttu&g_ep=EgoyMDI2MTAwNC4wIKXMDSoASAFQAw%3D%3D",
   },
 ];
 

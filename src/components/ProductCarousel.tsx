@@ -221,7 +221,7 @@ export function ProductCarousel({
                 <div className="text-xs text-center opacity-70 leading-tight">{p.spec}</div>
                 <ShareButton
                   product={p}
-                  className="text-xs font-semibold text-[var(--color-accent-700)] bg-transparent border-0 p-1 mx-auto"
+                  className="chip-link mx-auto mt-1"
                 />
               </div>
             ))}
