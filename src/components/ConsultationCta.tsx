@@ -5,15 +5,15 @@ export function ConsultationCta() {
     <div
       id="consultation"
       className="text-white"
-      style={{ background: "linear-gradient(135deg, var(--color-accent-2-700), var(--color-accent-2-500))" }}
+      style={{ background: "linear-gradient(135deg, var(--color-accent-900), var(--color-accent-600) 55%, var(--color-accent-500))" }}
     >
       <div className="max-w-[640px] dsk:max-w-[1240px] mx-auto pt-[calc(var(--space-8)*1.2)] pb-[calc(var(--space-8)*1.2)] px-[var(--space-4)] text-center grid gap-[var(--space-3)] justify-items-center">
         <h2 className="m-0 text-[26px]">Still not sure which system you need?</h2>
         <p className="m-0 opacity-90 max-w-[480px]">
-          Tell us your water quality and daily requirement — we will recommend the right system.
+          Tell us your water quality and daily requirement — we will recommend the right system for healthy water.
         </p>
         <div className="flex gap-[var(--space-2)] justify-center flex-wrap">
-          <a className="btn btn-light btn-lg" href="tel:+919876543210" style={{ color: "var(--color-accent-2-800)" }}>
+          <a className="btn btn-light btn-lg" href="tel:+919876543210">
             Call now
           </a>
           <a

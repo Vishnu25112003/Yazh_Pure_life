@@ -7,6 +7,7 @@ export function IronRemoverSection() {
     <SolutionPanel
       id="iron-remover"
       title="Iron remover"
+      intro="Removes iron, rust and yellow stains for healthy water at every tap."
       icon={<DropletIcon size={22} />}
       options={IRON_REMOVER}
       tint="accent"

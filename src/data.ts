@@ -98,8 +98,35 @@ export const WATER_SOFTENER = [
   },
 ];
 
+// Product photos from the Yazh Pure Life e-catalogue (mycrd.in/yazh-pure-life-1)
+export const GALLERY = [
+  { src: "/assets/gallery/ypl-dolphin-1.webp", name: "YPL Dolphin" },
+  { src: "/assets/gallery/ypl-lily-1.webp", name: "YPL Lily" },
+  { src: "/assets/gallery/ypl-aqua-2090-1.webp", name: "YPL Aqua 2090" },
+  { src: "/assets/gallery/ypl-aqua-2090-2.webp", name: "YPL Aqua 2090" },
+  { src: "/assets/gallery/ypl-pure-x-1.webp", name: "YPL Pure X" },
+  { src: "/assets/gallery/ypl-mirage-1.webp", name: "YPL Mirage" },
+  { src: "/assets/gallery/ypl-mirage-2.webp", name: "YPL Mirage" },
+  { src: "/assets/gallery/ypl-emira-1.webp", name: "YPL Emira" },
+  { src: "/assets/gallery/ypl-emira-2.webp", name: "YPL Emira" },
+  { src: "/assets/gallery/livepure-1.webp", name: "Livepure / P & A" },
+  { src: "/assets/gallery/livepure-2.webp", name: "Livepure / P & A" },
+  { src: "/assets/gallery/ypl-sky-1.webp", name: "YPL Sky" },
+  { src: "/assets/gallery/ypl-sky-2.webp", name: "YPL Sky" },
+  { src: "/assets/gallery/g-series-vocue-1.webp", name: "G-Series Vocue" },
+  { src: "/assets/gallery/g-series-vocue-2.webp", name: "G-Series Vocue" },
+  { src: "/assets/gallery/prolife-fiesta-1.webp", name: "Prolife Fiesta" },
+  { src: "/assets/gallery/prolife-fiesta-2.webp", name: "Prolife Fiesta" },
+  { src: "/assets/gallery/undersink-ro-1.webp", name: "Undersink RO" },
+  { src: "/assets/gallery/undersink-ro-2.webp", name: "Undersink RO" },
+  { src: "/assets/gallery/undersink-ro-3.webp", name: "Undersink RO" },
+  { src: "/assets/gallery/ypl-hot-cold-1.webp", name: "YPL Purelife Hot & Cold" },
+  { src: "/assets/gallery/ypl-whale-25-1.webp", name: "YPL Whale 25" },
+  { src: "/assets/gallery/ypl-whale-25-2.webp", name: "YPL Whale 25" },
+];
+
 export const WHY_CHOOSE_US = [
-  { title: "Since 2009", body: "Serving Chennai since 2009", tint: "accent" as const },
+  { title: "Since 2009", body: "Delivering healthy water across Chennai since 2009", tint: "accent" as const },
   { title: "All brands", body: "Kent, Aquaguard, LG, Whirlpool and more", tint: "accent2" as const },
   { title: "Genuine spares", body: "Genuine spares only, every time", tint: "accent" as const },
   { title: "AMC available", body: "Annual maintenance packages available", tint: "accent2" as const },

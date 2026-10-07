@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BRANCHES, CONTACT, telLink } from "../data";
-import { ClockOutlineIcon, MailIcon, MapPinIcon, PhoneIcon, PlusIcon } from "./icons";
+import { ClockOutlineIcon, DropletIcon, MailIcon, MapPinIcon, PhoneIcon, PlusIcon } from "./icons";
 
 type Branch = (typeof BRANCHES)[number];
 
@@ -91,11 +91,14 @@ export function Footer() {
       style={{ background: "linear-gradient(160deg, var(--color-accent-900), var(--color-accent-2-900))" }}
     >
       <div className="max-w-[640px] dsk:max-w-[1240px] mx-auto py-[var(--space-6)] px-[var(--space-4)] grid gap-[var(--space-4)]">
-        <div className="grid gap-1">
-          <div className="text-xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>
-            Yazh Pure Life
+        <div className="footer-hero">
+          <div className="footer-hero-rule" aria-hidden="true">
+            <span />
+            <DropletIcon size={22} />
+            <span />
           </div>
-          <div className="text-[13px] opacity-75">Clean water for your home and business — since 2009.</div>
+          <h2 className="footer-hero-title">Healthy Water</h2>
+          <p className="footer-hero-sub">For your home and business — since 2009.</p>
         </div>
 
         <BranchSection />
@@ -112,21 +115,19 @@ export function Footer() {
           </span>
         </div>
 
-        <div
-          className="flex gap-[var(--space-3)] flex-wrap text-[13px] pt-[var(--space-4)]"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.15)" }}
-        >
-          <a href="/"><span className="ypl-shine">Home</span></a>
-          <a href="/commercial"><span className="ypl-shine">Commercial</span></a>
-          <a href="/iron-remover"><span className="ypl-shine">Iron Remover</span></a>
-          <a href="/water-softener"><span className="ypl-shine">Water Softener</span></a>
-          <a href="/spares"><span className="ypl-shine">Spares</span></a>
-          <a href={CONTACT.mycrd} target="_blank" rel="noopener">
-            <span className="ypl-shine">Digital card</span>
-          </a>
+        <div className="footer-bottom">
+          <nav className="footer-links" aria-label="Footer">
+            <a href="#top"><span className="ypl-shine">Home</span></a>
+            <a href="#commercial"><span className="ypl-shine">Commercial</span></a>
+            <a href="#iron-remover"><span className="ypl-shine">Iron Remover</span></a>
+            <a href="#water-softener"><span className="ypl-shine">Water Softener</span></a>
+            <a href="#gallery"><span className="ypl-shine">Gallery</span></a>
+            <a href={CONTACT.mycrd} target="_blank" rel="noopener">
+              <span className="ypl-shine">Digital card</span>
+            </a>
+          </nav>
+          <div className="footer-copy">© 2026 Yazh Pure Life. All rights reserved.</div>
         </div>
-
-        <div className="opacity-60 text-[11px]">© 2026 Yazh Pure Life. All rights reserved.</div>
       </div>
     </footer>
   );

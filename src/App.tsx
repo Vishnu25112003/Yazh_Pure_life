@@ -2,19 +2,19 @@ import { CommercialSection } from "./components/CommercialSection";
 import { ConsultationCta } from "./components/ConsultationCta";
 import { DomesticSection } from "./components/DomesticSection";
 import { Footer } from "./components/Footer";
+import { GallerySection } from "./components/GallerySection";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { IronRemoverSection } from "./components/IronRemoverSection";
 import { MobileBottomBar } from "./components/MobileBottomBar";
 import { ReviewsSection } from "./components/ReviewsSection";
 import { ServiceSection } from "./components/ServiceSection";
-import { SparesSection } from "./components/SparesSection";
 import { WaterSoftenerSection } from "./components/WaterSoftenerSection";
 import { WhyChooseUs } from "./components/WhyChooseUs";
 
 export default function App() {
   return (
-    <div className="ypl-page min-h-screen" style={{ background: "var(--color-bg)", color: "var(--color-text)" }}>
+    <div id="top" className="ypl-page min-h-screen" style={{ background: "var(--color-bg)", color: "var(--color-text)" }}>
       <Header />
       <Hero />
 
@@ -22,11 +22,11 @@ export default function App() {
         <DomesticSection />
         <ServiceSection />
         <CommercialSection />
-        <div className="grid gap-[var(--space-8)] dsk:grid-cols-2 dsk:gap-[var(--space-6)] items-start">
+        <div className="solution-grid">
           <IronRemoverSection />
           <WaterSoftenerSection />
         </div>
-        <SparesSection />
+        <GallerySection />
       </main>
 
       <ConsultationCta />

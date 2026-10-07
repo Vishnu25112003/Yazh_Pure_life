@@ -8,7 +8,7 @@ const NAV_LINKS = [
   { href: "#commercial", label: "Commercial" },
   { href: "#iron-remover", label: "Iron Remover" },
   { href: "#water-softener", label: "Water Softener" },
-  { href: "#spares", label: "Spares" },
+  { href: "#gallery", label: "Gallery" },
 ];
 
 export function Header() {
@@ -45,18 +45,18 @@ export function Header() {
 
   return (
     <>
-      <header
-        className="sticky top-0 z-40 bg-[var(--color-bg)] border-b border-[var(--color-divider)] transition-transform duration-[250ms] ease-in-out"
-        style={{ transform: hidden ? "translateY(-100%)" : "translateY(0)" }}
-      >
+      {/* Desktop logo — not sticky, so it scrolls away with the page */}
+      <div className="desktop-logo-bar">
+        <a href="/">
+          <img src="/assets/logo.png" alt="Yazh Pure Life — RO water purifier for healthy water" className="h-[150px] block" />
+        </a>
+      </div>
+
+      {/* Sticky header: on desktop the navbar always stays pinned; on mobile it hides on scroll down */}
+      <header className={`site-header${hidden ? " is-hidden" : ""}`}>
         {/* Desktop */}
         <div className="hidden dsk:flex flex-col">
-          <div className="flex justify-center items-center py-[var(--space-4)] px-[var(--space-6)]">
-            <a href="/">
-              <img src="/assets/logo.png" alt="Yazh Pure Life — RO Water Purifier" className="h-[150px] block" />
-            </a>
-          </div>
-          <nav className="nav flex justify-center gap-[var(--space-6)] py-[var(--space-2)] px-[var(--space-6)] border-t border-[var(--color-divider)]">
+          <nav className="nav flex justify-center gap-[var(--space-6)] py-[var(--space-2)] px-[var(--space-6)]">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
@@ -80,32 +80,28 @@ export function Header() {
         </div>
 
         {/* Mobile */}
-        <div className="relative flex dsk:hidden items-center justify-center py-[var(--space-8)] px-[var(--space-4)]">
-          <a href="/" className="mx-auto">
-            <img
-              src="/assets/logo.png"
-              alt="Yazh Pure Life"
-              className="w-[85%] max-w-[420px] h-auto block mx-auto"
-            />
+        <div className="mobile-header dsk:hidden">
+          <a href="/" className="mobile-header-logo-link">
+            <img src="/assets/logo.png" alt="Yazh Pure Life" className="mobile-header-logo" />
           </a>
           <button
             type="button"
-            className="btn btn-icon absolute right-[var(--space-3)] top-[var(--space-3)]"
+            className="menu-toggle"
             aria-label="Open menu"
             onClick={() => setMenuOpen(true)}
           >
-            <MenuIcon />
+            <MenuIcon size={22} />
           </button>
         </div>
       </header>
 
       {menuOpen && (
         <div className="fixed inset-0 z-[60] bg-[var(--color-bg)] flex flex-col">
-          <div className="flex items-center justify-between py-[var(--space-3)] px-[var(--space-4)] border-b border-[var(--color-divider)]">
-            <img src="/assets/logo.png" alt="Yazh Pure Life" className="h-7" />
+          <div className="menu-logo-bar">
+            <img src="/assets/logo.png" alt="Yazh Pure Life" className="menu-logo" />
             <button
               type="button"
-              className="btn btn-icon"
+              className="menu-toggle menu-close"
               aria-label="Close menu"
               onClick={() => setMenuOpen(false)}
             >
