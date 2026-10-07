@@ -14,8 +14,8 @@ export function DomesticSection() {
           <a className="btn btn-primary" href="https://mycrd.in/yazh-pure-life-1" target="_blank" rel="noopener">
             View our purifiers
           </a>
-          <a href="#consultation" className="text-[13px]">
-            Not sure which one? Get a free consultation →
+          <a href="#consultation" className="text-link text-[14px]">
+            <span className="ypl-shine">Not sure which one? Get a free consultation →</span>
           </a>
         </div>
       </div>

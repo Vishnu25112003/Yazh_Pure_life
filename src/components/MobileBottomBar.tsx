@@ -8,7 +8,7 @@ export function MobileBottomBar() {
     >
       <a
         href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-        className="flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px]"
+        className="bar-btn flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] font-semibold"
         style={{ color: "var(--color-text)" }}
       >
         <PhoneIcon size={18} />
@@ -18,7 +18,7 @@ export function MobileBottomBar() {
         href={`https://wa.me/${CONTACT.whatsapp}`}
         target="_blank"
         rel="noopener"
-        className="flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] border-x border-[var(--color-divider)]"
+        className="bar-btn flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] font-semibold border-x border-[var(--color-divider)]"
         style={{ color: "var(--color-text)" }}
       >
         <WhatsAppIcon size={18} />
@@ -26,8 +26,8 @@ export function MobileBottomBar() {
       </a>
       <a
         href="#service"
-        className="flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] font-semibold"
-        style={{ color: "var(--color-accent-700)" }}
+        className="bar-btn flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] font-semibold"
+        style={{ color: "var(--color-accent-800)", background: "var(--color-accent-100)" }}
       >
         <WrenchIcon size={18} />
         Book service

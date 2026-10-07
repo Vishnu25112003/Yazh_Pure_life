@@ -13,17 +13,16 @@ export function ConsultationCta() {
           Tell us your water quality and daily requirement — we will recommend the right system.
         </p>
         <div className="flex gap-[var(--space-2)] justify-center flex-wrap">
-          <a className="btn" href="tel:+919876543210" style={{ background: "#ffffff", color: "var(--color-accent-2-800)" }}>
+          <a className="btn btn-light btn-lg" href="tel:+919876543210" style={{ color: "var(--color-accent-2-800)" }}>
             Call now
           </a>
           <a
-            className="btn"
+            className="btn btn-ghost-light btn-lg"
             href={waLink(
               "Hi Yazh Pure Life, I would like a consultation to choose the right water purifier for my home."
             )}
             target="_blank"
             rel="noopener"
-            style={{ background: "rgba(255,255,255,0.15)", color: "#ffffff", border: "1px solid rgba(255,255,255,0.5)" }}
           >
             WhatsApp us
           </a>

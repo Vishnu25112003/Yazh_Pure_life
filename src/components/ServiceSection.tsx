@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react";
 import { waLink } from "../data";
-import { ChevronRightIcon, DropletIcon, WrenchIcon } from "./icons";
 
 type Errors = Partial<Record<"name" | "phone" | "customerId" | "address" | "complaint", string>>;
 
@@ -132,24 +131,6 @@ export function ServiceSection() {
           </button>
         </form>
       )}
-
-      <div className="grid grid-cols-3 gap-[var(--space-2)]">
-        <a href="#service" className="card ypl-card p-[var(--space-3)] text-center text-xs gap-1 items-center">
-          <WrenchIcon className="mx-auto" />
-          Book service
-        </a>
-        <a href="#spares" className="card ypl-card p-[var(--space-3)] text-center text-xs gap-1 items-center">
-          <DropletIcon className="mx-auto" />
-          Order spares
-        </a>
-        <a
-          href="#consultation"
-          className="card ypl-card p-[var(--space-3)] text-center text-xs gap-1 items-center"
-        >
-          <ChevronRightIcon className="mx-auto" />
-          Get a quote
-        </a>
-      </div>
     </section>
   );
 }

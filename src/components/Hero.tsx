@@ -1,5 +1,3 @@
-import { telLink } from "../data";
-
 export function Hero() {
   return (
     <div
@@ -14,14 +12,6 @@ export function Hero() {
           RO, UV and alkaline water purifiers — sales, installation, service and spares, from a technician who
           answers the phone.
         </p>
-        <div className="flex gap-[var(--space-2)] justify-center flex-wrap mt-[var(--space-2)]">
-          <a className="btn btn-primary" href={telLink()}>
-            Call now
-          </a>
-          <a className="btn" href="#service" style={{ background: "#ffffff", color: "var(--color-accent-800)" }}>
-            Book service
-          </a>
-        </div>
       </div>
     </div>
   );
