@@ -43,32 +43,6 @@ export const BRANCHES = [
   },
 ];
 
-export const REVIEWS = {
-  rating: 4.8,
-  count: "1,000+",
-  url: "https://maps.google.com",
-  items: [
-    {
-      initials: "RS",
-      name: "R. Saravanan",
-      text: "Quick service and honest pricing. Technician explained everything before starting work.",
-      tint: "accent" as const,
-    },
-    {
-      initials: "PM",
-      name: "Priya M.",
-      text: "Been using their AMC for years. Always on time and genuine spares.",
-      tint: "accent2" as const,
-    },
-    {
-      initials: "KR",
-      name: "Karthik R.",
-      text: "Good response on WhatsApp, installed the same day I called.",
-      tint: "accent" as const,
-    },
-  ],
-};
-
 export const DOMESTIC_PRODUCTS = [
   { id: "ypl-dolphin", label: "YPL Dolphin", spec: "RO · 5 stage · 9 L tank", src: "/assets/domestic/ypl-dolphin.webp" },
   { id: "ypl-lily", label: "YPL Lily", spec: "RO + Minerals · 5 stage · 10 L", src: "/assets/domestic/ypl-lily.webp" },

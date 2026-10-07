@@ -22,8 +22,10 @@ export default function App() {
         <DomesticSection />
         <ServiceSection />
         <CommercialSection />
-        <IronRemoverSection />
-        <WaterSoftenerSection />
+        <div className="grid gap-[var(--space-8)] dsk:grid-cols-2 dsk:gap-[var(--space-6)] items-start">
+          <IronRemoverSection />
+          <WaterSoftenerSection />
+        </div>
         <SparesSection />
       </main>
 
