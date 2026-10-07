@@ -52,7 +52,10 @@ export function ServiceSection() {
           </p>
         </div>
       ) : (
-        <form className="card ypl-card p-[var(--space-4)] gap-[var(--space-3)]" onSubmit={handleSubmit}>
+        <form
+          className="card ypl-card p-[var(--space-4)] gap-[var(--space-3)] dsk:!grid dsk:grid-cols-2 dsk:gap-x-[var(--space-6)]"
+          onSubmit={handleSubmit}
+        >
           <div className="field">
             <label>Name</label>
             <input
@@ -101,7 +104,7 @@ export function ServiceSection() {
           <div className="field">
             <label>Address</label>
             <textarea
-              className="input"
+              className="input dsk:!min-h-[36px] dsk:!h-[36px] dsk:!resize-none"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="House no., street, area, city"
@@ -112,7 +115,7 @@ export function ServiceSection() {
               </div>
             )}
           </div>
-          <div className="field">
+          <div className="field dsk:col-span-2">
             <label>What's the complaint?</label>
             <textarea
               className="input"
@@ -126,7 +129,7 @@ export function ServiceSection() {
               </div>
             )}
           </div>
-          <button type="submit" className="btn btn-primary btn-block">
+          <button type="submit" className="btn btn-primary btn-block dsk:col-span-2">
             Send request on WhatsApp
           </button>
         </form>
