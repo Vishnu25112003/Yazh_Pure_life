@@ -1,3 +1,5 @@
+import { BrandMarquee } from "./BrandMarquee";
+
 export function Hero() {
   return (
     <div
@@ -12,6 +14,7 @@ export function Hero() {
           RO, UV and alkaline water purifiers for healthy drinking water — sales, installation, service and spares,
           from a technician who answers the phone.
         </p>
+        <BrandMarquee />
       </div>
     </div>
   );

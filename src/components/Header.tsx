@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CONTACT, telLink } from "../data";
-import { CloseIcon, MenuIcon, PhoneIcon } from "./icons";
+import { CloseIcon, MenuIcon, PhoneIcon, WrenchIcon } from "./icons";
 
 const NAV_LINKS = [
   { href: "/", label: "Home", current: true },
@@ -72,7 +72,7 @@ export function Header() {
                 <PhoneIcon /> {CONTACT.phoneDisplay}
               </a>
               <a className="btn btn-primary" href="#service">
-                Book service
+                <WrenchIcon size={20} /> Book service
               </a>
             </span>
           </nav>
@@ -128,7 +128,7 @@ export function Header() {
               Call {CONTACT.phoneDisplay}
             </a>
             <a className="btn btn-secondary btn-block" href="#service" onClick={() => setMenuOpen(false)}>
-              Book a service
+              <WrenchIcon size={20} /> Book a service
             </a>
           </div>
         </div>

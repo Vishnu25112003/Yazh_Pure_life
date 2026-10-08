@@ -29,7 +29,7 @@ export function MobileBottomBar() {
         className="bar-btn flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] font-semibold"
         style={{ color: "var(--color-accent-800)", background: "var(--color-accent-100)" }}
       >
-        <WrenchIcon size={18} />
+        <WrenchIcon size={20} />
         Book service
       </a>
     </div>

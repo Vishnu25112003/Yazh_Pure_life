@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { waLink } from "../data";
+import { WrenchIcon } from "./icons";
 
 type Errors = Partial<Record<"name" | "phone" | "customerId" | "address" | "complaint", string>>;
 
@@ -43,7 +44,12 @@ export function ServiceSection() {
 
   return (
     <section id="service" className="grid gap-[var(--space-3)]">
-      <h2 className="m-0">Report a fault, fast</h2>
+      <h2 className="m-0 flex items-center gap-[var(--space-3)]">
+        <span className="service-badge">
+          <WrenchIcon size={28} />
+        </span>
+        Report a fault, fast
+      </h2>
 
       {sent ? (
         <div className="card ypl-card p-[var(--space-4)] text-center">

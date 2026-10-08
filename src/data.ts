@@ -120,3 +120,55 @@ export function waLink(message: string): string {
 export function telLink(): string {
   return `tel:${CONTACT.phone.replace(/\s/g, "")}`;
 }
+
+// Brands we service — shown as scrolling chips at the bottom of the hero.
+export const OWN_BRAND = "Yazh Pure Life";
+
+export const SERVICE_BRANDS = [
+  {
+    title: "Major & established national brands",
+    brands: [
+      "Aquaguard (Eureka Forbes)",
+      "Kent RO Systems",
+      "HUL Pureit",
+      "Livpure",
+      "AO Smith",
+      "Blue Star",
+      "Havells",
+      "Sharp",
+      "LG India",
+      "Whirlpool",
+      "V-Guard",
+      "Panasonic",
+      "Bajaj",
+      "Orient Electric",
+    ],
+  },
+  {
+    title: "Tech-focused & D2C brands",
+    brands: [
+      "Urban Company (Native Series)",
+      "Atomberg (Intellon)",
+      "DrinkPrime",
+      "Konvio Neer",
+      "Cloudtap",
+      "Doctor Fresh",
+    ],
+  },
+  {
+    title: "Regional, assembler & medium-scale companies",
+    brands: [
+      OWN_BRAND,
+      "Morf India",
+      "Aquafresh / Aquafresh RO",
+      "ZeroB (Ion Exchange)",
+      "Aqua Galaxy",
+      "V Aqua (ROSP)",
+      "Sriram Filters",
+      "Easan Digital Water Technology",
+      "Oxy Plus Water",
+      "ASL Enterprises",
+      "CN Water",
+    ],
+  },
+];

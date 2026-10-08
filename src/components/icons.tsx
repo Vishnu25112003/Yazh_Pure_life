@@ -43,6 +43,31 @@ export function WrenchIcon({ size = 18, className }: IconProps) {
   );
 }
 
+// Technician with cap, gear and spanner — the client's service icon, redrawn as a line icon so it stays sharp at small sizes.
+export function ServiceIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 512 512" className={className} {...base} strokeWidth={30}>
+      {/* cap, brim and face */}
+      <path d="M102 190C102 122 146 72 200 72S298 122 298 190" />
+      <path d="M102 190Q200 150 298 190" />
+      <path d="M108 196C110 262 152 302 200 302S290 262 292 196" />
+      {/* ears */}
+      <path d="M104 228Q84 232 90 256Q96 270 114 268" />
+      <path d="M296 228Q316 232 310 256Q304 270 286 268" />
+      {/* neck, shoulders and overall bib */}
+      <path d="M160 296V340M240 296V340" />
+      <path d="M30 482V414Q30 352 104 340H160M240 340H296Q370 352 370 414V482" />
+      <path d="M112 346V440H288V346" />
+      {/* gear */}
+      <path d="M391 33L393 9L419 9L421 33L440 40L458 25L477 44L462 62L469 81L493 83L493 109L469 111L462 130L477 148L458 167L440 152L421 159L419 183L393 183L391 159L372 152L354 167L335 148L350 130L343 111L319 109L319 83L343 81L350 62L335 44L354 25L372 40Z" />
+      <circle cx="406" cy="96" r="28" />
+      {/* spanner */}
+      <path d="M392 212C360 234 362 286 404 302V456Q404 478 426 478T448 456V302C490 286 492 234 460 212V244Q426 274 392 244Z" />
+      <path d="M426 350V412" />
+    </svg>
+  );
+}
+
 export function DropletIcon({ size = 18, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
