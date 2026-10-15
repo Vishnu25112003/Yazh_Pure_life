@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import { waLink } from "../data";
+import { useSite } from "../site";
 import { WrenchIcon } from "./icons";
 
 type Errors = Partial<Record<"name" | "phone" | "customerId" | "address" | "complaint", string>>;
 
 export function ServiceSection() {
+  const { contact } = useSite();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [customerId, setCustomerId] = useState("");
@@ -37,7 +39,7 @@ export function ServiceSection() {
     }
 
     const message = `New service request from website:\nName: ${name.trim()}\nMobile: ${phone.trim()}\nCustomer ID: ${customerId.trim()}\nAddress: ${address.trim()}\nComplaint: ${complaint.trim()}`;
-    window.open(waLink(message), "_blank");
+    window.open(waLink(contact, message), "_blank");
     setSent(true);
     setErrors({});
   };

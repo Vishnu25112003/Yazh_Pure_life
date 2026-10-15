@@ -1,6 +1,8 @@
-import { waLink } from "../data";
+import { telLink, waLink } from "../data";
+import { useSite } from "../site";
 
 export function ConsultationCta() {
+  const { contact } = useSite();
   return (
     <div
       id="consultation"
@@ -13,12 +15,13 @@ export function ConsultationCta() {
           Tell us your water quality and daily requirement — we will recommend the right system for healthy water.
         </p>
         <div className="flex gap-[var(--space-2)] justify-center flex-wrap">
-          <a className="btn btn-light btn-lg" href="tel:+919876543210">
+          <a className="btn btn-light btn-lg" href={telLink(contact)}>
             Call now
           </a>
           <a
             className="btn btn-ghost-light btn-lg"
             href={waLink(
+              contact,
               "Hi Yazh Pure Life, I would like a consultation to choose the right water purifier for my home."
             )}
             target="_blank"

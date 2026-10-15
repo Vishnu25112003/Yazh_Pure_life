@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { GALLERY } from "../data";
+import { useSite } from "../site";
 import { ChevronRightIcon, CloseIcon } from "./icons";
 
 export function GallerySection() {
+  const { gallery: GALLERY } = useSite();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const open = openIndex !== null ? GALLERY[openIndex] : null;
 

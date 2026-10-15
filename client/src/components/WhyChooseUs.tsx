@@ -1,9 +1,10 @@
-import { WHY_CHOOSE_US } from "../data";
+import { useSite } from "../site";
 import { BadgeIcon, CheckIcon, ClockIcon, ShieldIcon } from "./icons";
 
 const ICONS = [ShieldIcon, CheckIcon, BadgeIcon, ClockIcon];
 
 export function WhyChooseUs() {
+  const { whyChooseUs: WHY_CHOOSE_US } = useSite();
   return (
     <section className="grid gap-[var(--space-3)]">
       <h2 className="m-0">Why choose us</h2>

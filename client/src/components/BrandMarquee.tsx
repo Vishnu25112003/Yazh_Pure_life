@@ -1,4 +1,4 @@
-import { OWN_BRAND, SERVICE_BRANDS } from "../data";
+import { useSite } from "../site";
 import { ServiceIcon, WrenchIcon } from "./icons";
 
 // Repeat a short list until one half of the loop is long enough to fill a wide row without a gap.
@@ -10,11 +10,11 @@ function fillHalf(brands: string[]): string[] {
   return half;
 }
 
-// Every brand in one list — own brand first — for a single continuous row.
-const ALL_BRANDS = [OWN_BRAND, ...SERVICE_BRANDS.flatMap((group) => group.brands).filter((b) => b !== OWN_BRAND)];
-
 export function BrandMarquee() {
-  const half = fillHalf(ALL_BRANDS);
+  const { ownBrand: OWN_BRAND, serviceBrands } = useSite();
+  // Every brand in one list — own brand first — for a single continuous row.
+  const allBrands = [OWN_BRAND, ...serviceBrands.flatMap((group) => group.brands).filter((b) => b !== OWN_BRAND)];
+  const half = fillHalf(allBrands);
   // Two copies of the half make the loop seamless; only the first real list is read by screen readers.
   const loop = [...half, ...half];
 
@@ -34,7 +34,7 @@ export function BrandMarquee() {
         <div className="brand-viewport">
           <ul className="brand-track" style={{ animationDuration: `${half.length * 2.6}s` }}>
             {loop.map((brand, i) => {
-              const isCopy = i >= ALL_BRANDS.length;
+              const isCopy = i >= allBrands.length;
               const isOwn = brand === OWN_BRAND;
               return (
                 <li key={i} className={`brand-chip${isOwn ? " is-own" : ""}`} aria-hidden={isCopy || undefined}>

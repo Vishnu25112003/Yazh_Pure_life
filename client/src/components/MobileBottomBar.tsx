@@ -1,13 +1,15 @@
-import { CONTACT } from "../data";
+import { telLink } from "../data";
+import { useSite } from "../site";
 import { PhoneIcon, WhatsAppIcon, WrenchIcon } from "./icons";
 
 export function MobileBottomBar() {
+  const { contact: CONTACT } = useSite();
   return (
     <div
       className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--color-bg)] border-t border-[var(--color-divider)] grid grid-cols-3 dsk:hidden"
     >
       <a
-        href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
+        href={telLink(CONTACT)}
         className="bar-btn flex flex-col items-center gap-0.5 py-[var(--space-2)] text-[11px] font-semibold"
         style={{ color: "var(--color-text)" }}
       >

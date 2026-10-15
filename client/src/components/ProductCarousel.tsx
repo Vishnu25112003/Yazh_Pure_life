@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { CONTACT, telLink, waLink } from "../data";
+import { telLink, waLink } from "../data";
+import { useSite } from "../site";
+import type { Product } from "../types";
 import { ChevronRightIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from "./icons";
 import { ProductImage } from "./ProductImage";
-
-export type Product = { id: string; label: string; spec: string; src: string; points?: string[] };
 
 function productUrl(id: string) {
   return `${window.location.origin}/?product=${encodeURIComponent(id)}`;
@@ -53,6 +53,7 @@ function ShareButton({ product, className = "" }: { product: Product; className?
 }
 
 function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
+  const { contact: CONTACT } = useSite();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -98,14 +99,14 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         <div className="grid gap-[var(--space-2)]">
           <a
             className="btn btn-primary btn-block"
-            href={waLink(`Hi, I am interested in ${product.label} (${product.spec}). Please share more details.`)}
+            href={waLink(CONTACT, `Hi, I am interested in ${product.label} (${product.spec}). Please share more details.`)}
             target="_blank"
             rel="noopener"
           >
             <WhatsAppIcon /> Enquire on WhatsApp
           </a>
           <div className="grid grid-cols-2 gap-[var(--space-2)]">
-            <a className="btn btn-secondary" href={telLink()}>
+            <a className="btn btn-secondary" href={telLink(CONTACT)}>
               <PhoneIcon /> Call {CONTACT.phoneDisplay}
             </a>
             <ShareButton product={product} className="btn btn-secondary" />

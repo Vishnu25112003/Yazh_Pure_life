@@ -1,9 +1,10 @@
-import { DOMESTIC_PRODUCTS } from "../data";
+import { useSite } from "../site";
 import { ProductCarousel } from "./ProductCarousel";
 
 export function DomesticSection() {
+  const { domesticProducts, contact } = useSite();
   return (
-    <ProductCarousel sectionId="domestic" title="Domestic RO water purifiers in Chennai" products={DOMESTIC_PRODUCTS}>
+    <ProductCarousel sectionId="domestic" title="Domestic RO water purifiers in Chennai" products={domesticProducts}>
       <div className="px-[var(--space-6)] pb-[var(--space-6)] grid gap-[var(--space-3)]">
         <span className="tag tag-accent justify-self-start">Most popular</span>
         <p className="m-0 opacity-85">
@@ -12,7 +13,7 @@ export function DomesticSection() {
           on-time service by our own technicians in Kolathur, Avadi and across Chennai.
         </p>
         <div className="flex gap-[var(--space-3)] items-center flex-wrap">
-          <a className="btn btn-primary" href="https://mycrd.in/yazh-pure-life-1" target="_blank" rel="noopener">
+          <a className="btn btn-primary" href={contact.mycrd} target="_blank" rel="noopener">
             View our purifiers
           </a>
           <a href="#consultation" className="text-link text-[14px]">

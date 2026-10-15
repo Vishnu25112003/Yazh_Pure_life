@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { BRANCHES, CONTACT, telLink } from "../data";
+import { telLink } from "../data";
+import { useSite } from "../site";
+import type { Branch } from "../types";
 import { ClockOutlineIcon, DropletIcon, MailIcon, MapPinIcon, PhoneIcon, PlusIcon } from "./icons";
-
-type Branch = (typeof BRANCHES)[number];
 
 function MapButton({ branch }: { branch: Branch }) {
   return (
@@ -19,14 +19,16 @@ function MapButton({ branch }: { branch: Branch }) {
 }
 
 function ContactButton() {
+  const { contact } = useSite();
   return (
-    <a href={telLink()} className="btn btn-ghost-light btn-sm" aria-label="Call us about this branch">
+    <a href={telLink(contact)} className="btn btn-ghost-light btn-sm" aria-label="Call us about this branch">
       <PhoneIcon size={15} /> Contact
     </a>
   );
 }
 
 function BranchSection() {
+  const { branches: BRANCHES } = useSite();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -98,6 +100,7 @@ function BranchSection() {
 }
 
 export function Footer() {
+  const { contact: CONTACT } = useSite();
   return (
     <footer
       className="ypl-footer text-white pb-20 dsk:pb-0"
@@ -120,7 +123,7 @@ export function Footer() {
         <BranchSection />
 
         <div className="flex gap-[var(--space-4)] flex-wrap text-[13px]">
-          <a href={telLink()} className="flex items-center gap-1.5">
+          <a href={telLink(CONTACT)} className="flex items-center gap-1.5">
             <PhoneIcon /> <span className="ypl-shine">{CONTACT.phoneDisplay}</span>
           </a>
           <a href={`mailto:${CONTACT.email}`} className="flex items-center gap-1.5">

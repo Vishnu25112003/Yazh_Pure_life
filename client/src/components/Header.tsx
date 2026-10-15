@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { CONTACT, telLink } from "../data";
+import { telLink } from "../data";
+import { useSite } from "../site";
 import { CloseIcon, MenuIcon, PhoneIcon, WrenchIcon } from "./icons";
 
 const NAV_LINKS = [
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 const SECTION_IDS = ["domestic", "commercial", "dispenser", "gallery"];
 
 export function Header() {
+  const { contact: CONTACT } = useSite();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeHref, setActiveHref] = useState("/");
   const [hidden, setHidden] = useState(false);
@@ -88,7 +90,7 @@ export function Header() {
               </a>
             ))}
             <span className="ml-auto flex gap-[var(--space-2)]">
-              <a className="btn btn-secondary" href={telLink()}>
+              <a className="btn btn-secondary" href={telLink(CONTACT)}>
                 <PhoneIcon /> {CONTACT.phoneDisplay}
               </a>
               <a className="btn btn-primary" href="#service">
@@ -142,7 +144,7 @@ export function Header() {
             ))}
           </nav>
           <div className="mt-auto p-[var(--space-6)] flex flex-col gap-[var(--space-2)]">
-            <a className="btn btn-primary btn-block" href={telLink()}>
+            <a className="btn btn-primary btn-block" href={telLink(CONTACT)}>
               Call {CONTACT.phoneDisplay}
             </a>
             <a className="btn btn-secondary btn-block" href="#service" onClick={() => setMenuOpen(false)}>
