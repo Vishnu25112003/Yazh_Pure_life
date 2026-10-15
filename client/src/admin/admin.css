@@ -25,7 +25,7 @@
 .adm h3 {
   margin: 0;
 }
-.adm a {
+.adm a:not(.adm-btn):not(.adm-stat) {
   color: var(--color-accent-700);
 }
 
@@ -122,7 +122,12 @@
 
 .adm-main {
   padding: 16px 16px calc(var(--adm-bottom-h) + 28px + env(safe-area-inset-bottom));
-  max-width: 1100px;
+}
+/* Content is centred in the space beside the sidebar and capped for readability. */
+.adm-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 @media (min-width: 1024px) {
@@ -593,9 +598,56 @@ textarea.adm-input {
 .adm-form {
   max-width: 760px;
 }
+
+/* Product form: two cards side by side on desktop (details | image + visibility) */
+.adm-formgrid {
+  display: grid;
+  gap: 14px;
+}
+.adm-formgrid > .adm-card + .adm-card {
+  margin-top: 0;
+}
+.adm-formgrid .adm-savebar {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+@media (min-width: 1024px) {
+  .adm-formgrid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .adm-formgrid .adm-side {
+    position: sticky;
+    top: calc(var(--adm-top-h) + 16px);
+  }
+  .adm-formgrid .adm-img-preview {
+    max-width: 100%;
+  }
+}
+
+/* Dashboard: left stack (actions + attention) beside recent changes */
+.adm-dash {
+  display: grid;
+  gap: 14px;
+}
+.adm-stack {
+  display: grid;
+  gap: 14px;
+}
+.adm-dash .adm-card,
+.adm-stack .adm-card {
+  margin-top: 0;
+}
+@media (min-width: 900px) {
+  .adm-dash {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
 .adm-cols {
   display: grid;
   gap: 0 16px;
+  align-items: start;
 }
 @media (min-width: 720px) {
   .adm-cols {
@@ -852,6 +904,15 @@ textarea.adm-input {
 }
 
 /* ---------- small helpers ---------- */
+@media (min-width: 1800px) {
+  .adm-container {
+    max-width: 1440px;
+  }
+  .adm-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
 .adm-hide-sm {
   display: none;
 }

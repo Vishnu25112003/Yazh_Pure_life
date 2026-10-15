@@ -66,10 +66,3 @@ export const galleryItemSchema = z.object({
 export const reorderSchema = z.object({
   ids: z.array(z.number().int().positive()).min(1).max(500),
 });
-
-export const cloudinarySchema = z.object({
-  cloudName: text("Cloud name", 60).refine((v) => /^[A-Za-z0-9_-]{2,60}$/.test(v), "Letters, numbers, - and _ only"),
-  apiKey: text("API key", 30).refine((v) => /^\d{6,30}$/.test(v), "The API key is a number, e.g. 123456789012345"),
-  // Blank means "keep the saved secret"; the route enforces it is present on first save.
-  apiSecret: z.string().trim().max(100, "API secret is too long").refine((v) => !/\s/.test(v), "API secret has no spaces").default(""),
-});

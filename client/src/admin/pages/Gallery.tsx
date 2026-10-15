@@ -171,7 +171,7 @@ export function GalleryPage() {
           className="adm-btn adm-btn-primary"
           disabled={uploading || !uploadsEnabled}
           onClick={() => fileInput.current?.click()}
-          title={uploadsEnabled ? undefined : "Add your Cloudinary details in Settings to enable uploads"}
+          title={uploadsEnabled ? undefined : "Image upload is not set up on the server yet"}
         >
           <Icons.upload /> {uploading ? "Uploading…" : "Upload photos"}
         </button>

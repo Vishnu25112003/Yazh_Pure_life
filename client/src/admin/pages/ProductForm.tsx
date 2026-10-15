@@ -77,7 +77,8 @@ export function ProductForm({ category }: { category: Category }) {
         </Link>
       </PageHead>
 
-      <form className="adm-form adm-card" onSubmit={submit} noValidate>
+      <form className="adm-formgrid" onSubmit={submit} noValidate>
+        <div className="adm-card">
         <div className="adm-cols">
           <Field label="Name" htmlFor="label" error={errors.label}>
             <input
@@ -121,6 +122,12 @@ export function ProductForm({ category }: { category: Category }) {
           <input id="spec" className="adm-input" value={form.spec} maxLength={200} aria-invalid={!!errors.spec} onChange={(e) => set("spec", e.target.value)} />
         </Field>
 
+        <Field label="Key points" error={pointsError} hint="Bullet list shown in the product details (up to 12). Press Enter to add the next one.">
+          <PointsEditor value={form.points} onChange={(v) => set("points", v)} />
+        </Field>
+        </div>
+
+        <div className="adm-card adm-side">
         <Field label="Product image" htmlFor="image" error={errors.imageUrl} hint="Clear photo on a plain background works best (JPG, PNG or WebP, up to 5 MB).">
           <ImageUpload
             id="image"
@@ -132,11 +139,8 @@ export function ProductForm({ category }: { category: Category }) {
           />
         </Field>
 
-        <Field label="Key points" error={pointsError} hint="Bullet list shown in the product details (up to 12). Press Enter to add the next one.">
-          <PointsEditor value={form.points} onChange={(v) => set("points", v)} />
-        </Field>
-
         <Switch checked={form.isActive} onChange={(v) => set("isActive", v)} label={form.isActive ? "Visible on the website" : "Hidden from the website"} />
+        </div>
 
         <div className="adm-savebar">
           <Link to={`/${category}`} className="adm-btn">
