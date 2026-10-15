@@ -3,15 +3,18 @@ import { CONTACT, telLink } from "../data";
 import { CloseIcon, MenuIcon, PhoneIcon, WrenchIcon } from "./icons";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home", current: true },
-  { href: "https://mycrd.in/yazh-pure-life-1", label: "Domestic", external: true },
+  { href: "/", label: "Home" },
+  { href: "#domestic", label: "Domestic" },
   { href: "#commercial", label: "Commercial" },
   { href: "#dispenser", label: "Dispenser" },
   { href: "#gallery", label: "Gallery" },
 ];
 
+const SECTION_IDS = ["domestic", "commercial", "dispenser", "gallery"];
+
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState("/");
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
   const upDistance = useRef(0);
@@ -33,6 +36,25 @@ export function Header() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateActive = () => {
+      const line = window.innerHeight * 0.35;
+      let active = "/";
+      for (const id of SECTION_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) active = `#${id}`;
+      }
+      setActiveHref(active);
+    };
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive);
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
   }, []);
 
   useEffect(() => {
@@ -60,9 +82,7 @@ export function Header() {
               <a
                 key={link.label}
                 href={link.href}
-                aria-current={link.current ? "page" : undefined}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noopener" : undefined}
+                aria-current={link.href === activeHref ? "page" : undefined}
               >
                 <span className="ypl-shine">{link.label}</span>
               </a>
@@ -115,8 +135,6 @@ export function Header() {
               <a
                 key={link.label}
                 href={link.href}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noopener" : undefined}
                 onClick={() => setMenuOpen(false)}
               >
                 <span className="ypl-shine">{link.label}</span>

@@ -4,7 +4,7 @@ import { CONTACT, telLink, waLink } from "../data";
 import { ChevronRightIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from "./icons";
 import { ProductImage } from "./ProductImage";
 
-export type Product = { id: string; label: string; spec: string; src: string };
+export type Product = { id: string; label: string; spec: string; src: string; points?: string[] };
 
 function productUrl(id: string) {
   return `${window.location.origin}/?product=${encodeURIComponent(id)}`;
@@ -87,6 +87,13 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         <div>
           <h3 className="m-0">{product.label}</h3>
           <p className="m-0 mt-1 opacity-80">{product.spec}</p>
+          {product.points && (
+            <ul className="m-0 mt-2 pl-5 grid gap-1 text-sm">
+              {product.points.map((pt) => (
+                <li key={pt}>{pt}</li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="grid gap-[var(--space-2)]">
           <a
@@ -207,22 +214,23 @@ export function ProductCarousel({
               <div
                 key={`${copy}-${p.id}`}
                 data-product={p.id}
-                className="shrink-0 grow-0 w-[170px] dsk:w-[210px] grid gap-1.5 box-border content-start cursor-pointer"
+                className="shrink-0 grow-0 w-[170px] dsk:w-[210px] flex flex-col gap-1.5 box-border cursor-pointer"
                 onClick={() => select(p.id)}
               >
-                <ProductImage
-                  label={p.label}
-                  src={p.src}
-                  className="w-full h-[150px] dsk:h-[190px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
-                />
+                <div className="relative">
+                  <ProductImage
+                    label={p.label}
+                    src={p.src}
+                    className="w-full h-[150px] dsk:h-[190px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
+                  />
+                </div>
                 <div className="text-sm text-center font-semibold whitespace-normal break-words leading-tight">
                   {p.label}
                 </div>
                 <div className="text-xs text-center opacity-70 leading-tight">{p.spec}</div>
-                <ShareButton
-                  product={p}
-                  className="chip-link mx-auto mt-1"
-                />
+                <div className="mt-auto pt-1 flex justify-center">
+                  <ShareButton product={p} className="chip-link" />
+                </div>
               </div>
             ))}
           </div>

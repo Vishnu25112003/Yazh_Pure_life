@@ -18,6 +18,14 @@ function MapButton({ branch }: { branch: Branch }) {
   );
 }
 
+function ContactButton() {
+  return (
+    <a href={telLink()} className="btn btn-ghost-light btn-sm" aria-label="Call us about this branch">
+      <PhoneIcon size={15} /> Contact
+    </a>
+  );
+}
+
 function BranchSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -25,7 +33,6 @@ function BranchSection() {
     <div className="grid gap-[var(--space-3)]">
       <div className="flex items-center gap-[var(--space-2)]">
         <h3 className="m-0 text-[22px] text-white">Our branches</h3>
-        <span className="branch-count">{BRANCHES.length}</span>
       </div>
 
       {/* Desktop: card grid */}
@@ -42,7 +49,10 @@ function BranchSection() {
               </div>
             </div>
             <p className="branch-address">{branch.address}</p>
-            <MapButton branch={branch} />
+            <div className="branch-actions">
+              <MapButton branch={branch} />
+              <ContactButton />
+            </div>
           </div>
         ))}
       </div>
@@ -74,7 +84,10 @@ function BranchSection() {
               </button>
               <div id={panelId} className="branch-acc-panel" role="region" hidden={!open}>
                 <p className="branch-address">{branch.address}</p>
-                <MapButton branch={branch} />
+                <div className="branch-actions">
+                  <MapButton branch={branch} />
+                  <ContactButton />
+                </div>
               </div>
             </div>
           );
@@ -92,13 +105,16 @@ export function Footer() {
     >
       <div className="max-w-[640px] dsk:max-w-[1240px] mx-auto py-[var(--space-6)] px-[var(--space-4)] grid gap-[var(--space-4)]">
         <div className="footer-hero">
+          <div className="footer-hero-logo">
+            <img src="/assets/logo.png" alt="Yazh Pure Life logo" />
+          </div>
           <div className="footer-hero-rule" aria-hidden="true">
             <span />
             <DropletIcon size={22} />
             <span />
           </div>
-          <h2 className="footer-hero-title">Healthy Water</h2>
-          <p className="footer-hero-sub">For your home and business — since 2009.</p>
+          <h2 className="footer-hero-title">YPL Healthy Water</h2>
+          <p className="footer-hero-sub">For your home and business.</p>
         </div>
 
         <BranchSection />

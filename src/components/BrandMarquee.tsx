@@ -25,7 +25,8 @@ export function BrandMarquee() {
           <WrenchIcon size={20} /> Service for every brand
         </span>
         <p className="brand-marquee-sub">
-          We repair and service our own Yazh Pure Life purifiers and every other major brand — RO, UV, UF and alkaline.
+          Expert RO water purifier repair and service in Chennai for all brands — Yazh Pure Life, Aquaguard, Kent,
+          Pureit and more. Filter change, AMC and genuine spares by trained technicians.
         </p>
       </div>
 

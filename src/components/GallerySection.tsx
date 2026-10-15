@@ -32,7 +32,7 @@ export function GallerySection() {
       <div className="gallery-head">
         <h2 className="m-0">Gallery</h2>
         <p className="gallery-sub">
-          Our range of water purifiers for healthy water at home — tap any photo to view it larger.
+          Our range of RO water purifiers in Chennai for healthy water at home — tap any photo to view it larger.
         </p>
       </div>
 
@@ -51,7 +51,7 @@ export function GallerySection() {
                 aria-hidden={isCopy || undefined}
                 tabIndex={isCopy ? -1 : undefined}
               >
-                <img src={item.src} alt={isCopy ? "" : `${item.name} water purifier`} loading="lazy" />
+                <img src={item.src} alt={isCopy ? "" : `${item.name} RO water purifier`} loading="lazy" />
                 <span className="gallery-caption">{item.name}</span>
               </button>
             );
@@ -65,7 +65,7 @@ export function GallerySection() {
             <button type="button" className="menu-toggle gallery-close" aria-label="Close" onClick={() => setOpenIndex(null)}>
               <CloseIcon />
             </button>
-            <img src={open.src} alt={`${open.name} water purifier`} className="gallery-lightbox-img" />
+            <img src={open.src} alt={`${open.name} RO water purifier`} className="gallery-lightbox-img" />
             <div className="gallery-lightbox-bar">
               <button type="button" className="gallery-nav" aria-label="Previous photo" onClick={() => step(-1)}>
                 <ChevronRightIcon className="gallery-prev-icon" />
