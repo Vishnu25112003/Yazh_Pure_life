@@ -1,48 +1,50 @@
 import express from "express";
+import helmet from "helmet";
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { readSite, resolveSite, validateSection, validateSite, writeSite } from "./store.js";
+import { pool } from "../db/pool.js";
+import { HttpError } from "./http.js";
+import { adminRouter } from "./routes/admin.js";
+import { authRouter, requireAjaxHeader, requireAuth } from "./routes/auth.js";
+import { publicRouter } from "./routes/public.js";
+import { ConflictError } from "./repo/admin.js";
 
 const PORT = Number(process.env.PORT) || 3001;
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "";
+const IS_PROD = process.env.NODE_ENV === "production";
 const CLIENT_DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../client/dist");
 
-const app = express();
-app.use(express.json({ limit: "2mb", strict: false }));
-
-const wrap = (fn) => (req, res, next) => fn(req, res).catch(next);
-
-function requireAdmin(req, res, next) {
-  if (!ADMIN_TOKEN) return res.status(503).json({ error: "ADMIN_TOKEN is not configured; updates are disabled" });
-  if (req.get("authorization") !== `Bearer ${ADMIN_TOKEN}`) return res.status(401).json({ error: "Unauthorized" });
-  next();
+if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 16) {
+  console.error("SESSION_SECRET must be set (16+ characters) in server/.env");
+  process.exit(1);
 }
 
-app.get("/api/health", (_req, res) => res.json({ ok: true }));
+const app = express();
+if (IS_PROD) app.set("trust proxy", 1); // behind a TLS-terminating proxy: needed for Secure cookies
+// CSP is left off so the public page's third-party widgets (reviews) and fonts keep working.
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(express.json({ limit: "1mb" }));
 
-app.get("/api/site", wrap(async (_req, res) => res.json(resolveSite(await readSite()))));
+app.use("/api", publicRouter);
 
-// Raw (unresolved) data, for editing.
-app.get("/api/site/raw", requireAdmin, wrap(async (_req, res) => res.json(await readSite())));
-
-// Replace the whole site document.
-app.put("/api/site", requireAdmin, wrap(async (req, res) => {
-  const err = validateSite(req.body);
-  if (err) return res.status(400).json({ error: err });
-  await writeSite(req.body);
-  res.json({ ok: true });
-}));
-
-// Replace one section, e.g. PUT /api/site/contact or /api/site/branches.
-app.put("/api/site/:section", requireAdmin, wrap(async (req, res) => {
-  const err = validateSection(req.params.section, req.body);
-  if (err) return res.status(400).json({ error: err });
-  const site = await readSite();
-  site[req.params.section] = req.body;
-  await writeSite(site);
-  res.json({ ok: true });
-}));
+// Sessions only exist on the admin API.
+const PgStore = connectPgSimple(session);
+app.use(
+  "/api/admin",
+  session({
+    name: "yazh.sid",
+    store: new PgStore({ pool, tableName: "session" }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, sameSite: "strict", secure: IS_PROD, maxAge: 1000 * 60 * 60 * 8 },
+  }),
+  requireAjaxHeader
+);
+app.use("/api/admin", authRouter);
+app.use("/api/admin", requireAuth, adminRouter);
 
 app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
 
@@ -53,8 +55,11 @@ if (existsSync(CLIENT_DIST)) {
 }
 
 app.use((err, _req, res, _next) => {
+  if (err instanceof HttpError) return res.status(err.status).json({ error: err.message, fields: err.fields });
+  if (err instanceof ConflictError) return res.status(409).json({ error: err.message, fields: { slug: err.message } });
+  if (err.type === "entity.parse.failed") return res.status(400).json({ error: "Invalid JSON" });
   console.error(err);
-  res.status(err.status || 500).json({ error: err.status ? err.message : "Internal server error" });
+  res.status(500).json({ error: "Internal server error" });
 });
 
 app.listen(PORT, () => console.log(`Yazh server listening on http://localhost:${PORT}`));
