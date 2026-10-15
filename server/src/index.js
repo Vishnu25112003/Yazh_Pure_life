@@ -48,6 +48,31 @@ app.use("/api/admin", requireAuth, adminRouter);
 
 app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
 
+// Public base URL for crawlers: SITE_URL if set (e.g. a custom domain), otherwise the host the request came in on.
+const siteUrl = (req) => (process.env.SITE_URL || `${req.protocol}://${req.get("host")}`).replace(/\/+$/, "");
+
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain").send(`User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: ${siteUrl(req)}/sitemap.xml
+`);
+});
+
+app.get("/sitemap.xml", (req, res) => {
+  res
+    .type("application/xml")
+    .send(
+      `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${siteUrl(req)}/</loc></url>
+</urlset>
+`
+    );
+});
+
 // Production: serve the built client from the same server.
 if (existsSync(CLIENT_DIST)) {
   app.use(express.static(CLIENT_DIST));
