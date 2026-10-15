@@ -43,7 +43,8 @@ export function Dashboard() {
         })}
       </div>
 
-      <div className="adm-two">
+      <div className="adm-dash">
+        <div className="adm-stack">
         <section className="adm-card">
           <h2>Quick actions</h2>
           <div className="adm-quick">
@@ -71,6 +72,7 @@ export function Dashboard() {
             </ul>
           )}
         </section>
+        </div>
 
         <section className="adm-card">
           <h2>Recent changes</h2>

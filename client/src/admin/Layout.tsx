@@ -23,9 +23,6 @@ export function Layout() {
         </a>
         <div className="adm-top-actions">
           <span className="adm-user">{email}</span>
-          <NavLink className="adm-btn adm-btn-sm adm-btn-icon" to="/settings" aria-label="Settings" title="Settings">
-            <Icons.gear />
-          </NavLink>
           <a className="adm-btn adm-btn-sm" href="/" target="_blank" rel="noopener">
             <Icons.external /> <span className="adm-hide-sm">View site</span>
           </a>
@@ -43,7 +40,9 @@ export function Layout() {
         ))}
       </nav>
       <main className="adm-main">
-        <Outlet />
+        <div className="adm-container">
+          <Outlet />
+        </div>
       </main>
     </>
   );
