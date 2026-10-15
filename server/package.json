@@ -10,7 +10,7 @@
     "db:seed": "node --env-file-if-exists=.env db/seed.js",
     "db:verify": "node --env-file-if-exists=.env db/verify.js",
     "start:local": "node --env-file=.env db/migrate.js && node --env-file=.env src/index.js",
-    "build": "npm run build --prefix ../client"
+    "build": "npm install --include=dev --prefix .. && npm run build --prefix ../client"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
