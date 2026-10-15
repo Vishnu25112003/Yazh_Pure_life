@@ -52,6 +52,17 @@ app.use("/api", (_req, res) => res.status(404).json({ error: "Not found" }));
 if (existsSync(CLIENT_DIST)) {
   app.use(express.static(CLIENT_DIST));
   app.get("*", (_req, res) => res.sendFile(path.join(CLIENT_DIST, "index.html")));
+} else if (IS_PROD) {
+  console.warn(
+    "[server] client/dist not found, so the website is not being served. " +
+      "Set the build command to: npm install --include=dev && npm run build"
+  );
+  app.get("*", (_req, res) =>
+    res
+      .status(503)
+      .type("text/plain")
+      .send("The website files were not built. Set the Render build command to: npm install --include=dev && npm run build")
+  );
 }
 
 app.use((err, _req, res, _next) => {

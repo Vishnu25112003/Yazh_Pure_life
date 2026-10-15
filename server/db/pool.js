@@ -5,13 +5,23 @@ const fail = (message) => {
   process.exit(1);
 };
 
-if (!process.env.DATABASE_URL) {
-  fail("DATABASE_URL is not set. Copy server/.env.example to server/.env (or set it in your host's environment) and fill it in.");
+// DATABASE_URL is the standard name; NEON_DATABASE_URL is accepted too (it is what the Neon setup notes call it).
+const RAW_URL = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
+
+if (!RAW_URL) {
+  // List look-alike variable names (names only, never values) to make typos obvious on the host.
+  const similar = Object.keys(process.env).filter((k) => /database|postgres|neon|^db_|_db$|^(pg|psql)|_ur[il]$/i.test(k));
+  fail(
+    "DATABASE_URL is not set. On Render: service -> Environment -> add a variable named exactly DATABASE_URL " +
+      "(all capitals, no spaces), value = your Neon connection string, then Save and redeploy. " +
+      "Locally: copy server/.env.example to server/.env. " +
+      `Similar variable names currently visible: ${similar.length ? similar.join(", ") : "(none)"}`
+  );
 }
 
 let url;
 try {
-  url = new URL(process.env.DATABASE_URL.trim());
+  url = new URL(RAW_URL.trim());
 } catch {
   fail("DATABASE_URL is not a valid URL. It must look like postgresql://USER:PASSWORD@HOST/DBNAME - no quotes, no spaces, and not the 'psql ...' command.");
 }
