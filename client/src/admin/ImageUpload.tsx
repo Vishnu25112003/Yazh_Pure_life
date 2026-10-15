@@ -52,7 +52,7 @@ export function ImageUpload({
           className="adm-btn"
           disabled={busy || !uploadsEnabled}
           onClick={() => input.current?.click()}
-          title={uploadsEnabled ? undefined : "Image upload is not configured on the server yet"}
+          title={uploadsEnabled ? undefined : "Add your Cloudinary details in Settings to enable uploads"}
         >
           <Icons.upload /> {busy ? "Uploading…" : value ? "Replace image" : "Upload image"}
         </button>
@@ -62,7 +62,7 @@ export function ImageUpload({
         className="adm-input"
         type="text"
         inputMode="url"
-        placeholder={uploadsEnabled ? "…or paste an image link" : "Paste an image link (uploads not set up yet)"}
+        placeholder={uploadsEnabled ? "…or paste an image link" : "Paste an image link (set up uploads in Settings)"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={invalid}

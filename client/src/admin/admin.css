@@ -868,3 +868,20 @@ textarea.adm-input {
     grid-template-columns: 1fr auto;
   }
 }
+
+.adm-pill {
+  display: inline-block;
+  font: 700 12px/1 var(--font-body);
+  padding: 4px 10px;
+  border-radius: 999px;
+  vertical-align: middle;
+  letter-spacing: 0;
+}
+.adm-pill.is-ok {
+  background: var(--adm-ok-bg);
+  color: var(--adm-ok);
+}
+.adm-pill.is-off {
+  background: var(--adm-warn-bg);
+  color: var(--adm-warn);
+}

@@ -1,15 +1,17 @@
 import { Router } from "express";
 import { HttpError, idParam, parse, wrap } from "../http.js";
 import * as repo from "../repo/admin.js";
+import { deleteCloudinary, getStoredCloudinary, saveCloudinary } from "../repo/settings.js";
 import {
   branchSchema,
+  cloudinarySchema,
   contactSchema,
   galleryItemSchema,
   productCreateSchema,
   productSchema,
   reorderSchema,
 } from "../schemas.js";
-import { uploadMiddleware, uploadToCloudinary, uploadsEnabled } from "../upload.js";
+import { configureCloudinary, resetCloudinaryConfig, testCloudinary, uploadMiddleware, uploadToCloudinary } from "../upload.js";
 
 export const adminRouter = Router();
 
@@ -79,10 +81,12 @@ adminRouter.delete("/products/:category/:id", wrap(async (req, res) => {
 }));
 
 // ---- Image upload (Cloudinary). Accepts 1-20 files in the "files" field; ?section= picks the folder. ----
-adminRouter.post("/upload", (req, res, next) => {
-  if (!uploadsEnabled()) {
-    return next(new HttpError(503, "Image upload is not configured (CLOUDINARY_URL). Paste an image link instead."));
+adminRouter.post("/upload", wrap(async (_req, _res, next) => {
+  if (!(await configureCloudinary())) {
+    throw new HttpError(503, "Image upload is not set up yet. Add your Cloudinary details in Settings, or paste an image link.");
   }
+  next();
+}), (req, res, next) => {
   uploadMiddleware(req, res, (err) => {
     if (!err) return next();
     if (err.code === "LIMIT_FILE_SIZE") return next(new HttpError(400, "Each image must be 5 MB or smaller"));
@@ -94,4 +98,43 @@ adminRouter.post("/upload", (req, res, next) => {
   res.json({ urls });
 }));
 
-adminRouter.get("/config", (_req, res) => res.json({ uploadsEnabled: uploadsEnabled() }));
+adminRouter.get("/config", wrap(async (_req, res) => res.json({ uploadsEnabled: Boolean(await configureCloudinary()) })));
+
+// ---- Settings: Cloudinary credentials (the secret is stored encrypted and never returned) ----
+const cloudinaryStatus = async () => {
+  const stored = await getStoredCloudinary();
+  const source = await configureCloudinary();
+  return {
+    configured: Boolean(source),
+    source, // "database" | "env" | null
+    cloudName: stored?.cloudName ?? "",
+    apiKey: stored?.apiKey ?? "",
+    hasSecret: Boolean(stored),
+  };
+};
+
+adminRouter.get("/settings/cloudinary", wrap(async (_req, res) => res.json(await cloudinaryStatus())));
+
+adminRouter.put("/settings/cloudinary", wrap(async (req, res) => {
+  const data = parse(cloudinarySchema, req.body);
+  if (!data.apiSecret) {
+    const stored = await getStoredCloudinary();
+    if (!stored) throw new HttpError(400, "Please fix the highlighted fields", { apiSecret: "API secret is required" });
+    data.apiSecret = stored.apiSecret; // blank = keep the saved secret
+  }
+  if (!(await testCloudinary(data))) {
+    throw new HttpError(400, "Cloudinary rejected these details. Check the cloud name, API key and secret.", {
+      cloudName: "Check this matches your Cloudinary dashboard",
+      apiKey: "Check this matches your Cloudinary dashboard",
+    });
+  }
+  await saveCloudinary(data);
+  resetCloudinaryConfig();
+  res.json(await cloudinaryStatus());
+}));
+
+adminRouter.delete("/settings/cloudinary", wrap(async (_req, res) => {
+  await deleteCloudinary();
+  resetCloudinaryConfig();
+  res.json(await cloudinaryStatus());
+}));

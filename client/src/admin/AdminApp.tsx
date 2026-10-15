@@ -7,6 +7,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { FooterPage } from "./pages/Footer";
 import { GalleryPage } from "./pages/Gallery";
 import { Login } from "./pages/Login";
+import { SettingsPage } from "./pages/Settings";
 import { ProductForm } from "./pages/ProductForm";
 import { ProductsPage } from "./pages/Products";
 import { CATEGORIES } from "./sections";
@@ -29,6 +30,7 @@ function Gate() {
         ))}
         <Route path="gallery" element={<GalleryPage />} />
         <Route path="footer" element={<FooterPage />} />
+        <Route path="settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
