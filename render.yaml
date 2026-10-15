@@ -1,0 +1,23 @@
+# Render Blueprint: one web service that serves the API and the built React site.
+services:
+  - type: web
+    name: yazh-pure-life
+    runtime: node
+    region: ohio # same region as the Neon database (us-east-2) for low latency
+    plan: free
+    # --include=dev: the client build needs Vite/TypeScript/Tailwind (dev dependencies).
+    buildCommand: npm install --include=dev && npm run build
+    # Applies pending DB migrations, then starts the server.
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL # Neon POOLED connection string (host contains -pooler)
+        sync: false
+      - key: CLOUDINARY_URL # optional: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+        sync: false
