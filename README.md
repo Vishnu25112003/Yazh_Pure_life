@@ -73,6 +73,6 @@ The browser calls the API with relative `/api` paths (same origin), so no API UR
 
 - Admin panel: dashboard, domestic / commercial / dispenser products, gallery, footer (branches + contact).
   Items can be hidden (kept but not shown on the site) instead of deleted.
-- The "Report a fault" form opens a prefilled WhatsApp chat — that is the contact channel.
+- The "Complaint Registration" form opens a prefilled WhatsApp chat — that is the contact channel.
 - Each product has a Share link (`/?product=<slug>`) that opens it directly.
 - `client/vercel.json` is only for a static front-end deploy; the front end needs the API, so host the server (Render) instead.
