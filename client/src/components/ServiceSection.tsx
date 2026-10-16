@@ -50,7 +50,7 @@ export function ServiceSection() {
         <span className="service-badge">
           <WrenchIcon size={28} />
         </span>
-        Report a fault, fast
+        Complaint Registration
       </h2>
 
       {sent ? (
