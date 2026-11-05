@@ -70,6 +70,9 @@ export function ProductsPage({ category }: { category: Category }) {
   return (
     <>
       <PageHead title={meta.title} sub={meta.sub}>
+        <Link to={`/${category}/catalog`} className="adm-btn">
+          <Icons.book /> Catalogue
+        </Link>
         <Link to={`/${category}/new`} className="adm-btn adm-btn-primary">
           <Icons.plus /> Add {meta.noun}
         </Link>

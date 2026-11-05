@@ -62,16 +62,15 @@ export async function getContact() {
     email: c.email,
     address: c.address,
     hours: c.hours,
-    mycrd: c.mycrd,
     updatedAt: c.updated_at,
   };
 }
 
 export async function updateContact(d) {
   await query(
-    `UPDATE site_settings SET phone=$1, phone_display=$2, whatsapp=$3, email=$4, address=$5, hours=$6, mycrd=$7, updated_at=now()
+    `UPDATE site_settings SET phone=$1, phone_display=$2, whatsapp=$3, email=$4, address=$5, hours=$6, updated_at=now()
      WHERE id = 1`,
-    [d.phone, d.phoneDisplay, d.whatsapp, d.email, d.address, d.hours, d.mycrd]
+    [d.phone, d.phoneDisplay, d.whatsapp, d.email, d.address, d.hours]
   );
   return getContact();
 }
