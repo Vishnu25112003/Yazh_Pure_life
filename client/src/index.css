@@ -455,6 +455,7 @@ textarea.input {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 10px;
 }
 
 /* — mobile menu: big centred logo, close button top-right — */
@@ -471,6 +472,7 @@ textarea.input {
   width: 100%;
   max-width: 320px;
   height: auto;
+  border-radius: 8px;
 }
 /* hamburger (and the matching close button): rounded square, top-right corner */
 .menu-toggle {
@@ -680,14 +682,12 @@ textarea.input {
 .footer-hero-logo {
   display: grid;
   place-items: center;
-  padding: 10px 22px;
   margin-bottom: var(--space-2);
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
 }
+/* the logo is its own blue badge now, so it needs no white plate behind it */
 .footer-hero-logo img {
   display: block;
+  border-radius: 14px;
   height: clamp(56px, 12vw, 84px);
   width: auto;
   max-width: 100%;

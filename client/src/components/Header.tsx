@@ -71,7 +71,7 @@ export function Header() {
       {/* Desktop logo — not sticky, so it scrolls away with the page */}
       <div className="desktop-logo-bar">
         <a href="/">
-          <img src="/assets/logo.png" alt="Yazh Pure Life — RO water purifier for healthy water" className="h-[150px] block" />
+          <img src="/assets/logo.png" alt="Yazh Pure Life — RO water purifier for healthy water" className="h-[150px] block rounded-[14px]" />
         </a>
       </div>
 
