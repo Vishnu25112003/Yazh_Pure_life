@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CatalogCard } from "../../catalog/CatalogCard";
 import { resolveCatalog } from "../../catalog/resolve";
@@ -510,9 +510,9 @@ export function CatalogEditor({ category }: { category: Category }) {
               </button>
             </div>
           </div>
-          <div className={`adm-catframe is-${device}`} data-cat-scroll>
+          <PreviewFrame device={device}>
             <CatalogCard data={resolved} category={category} pageUrl={pageUrl} mode="preview" />
-          </div>
+          </PreviewFrame>
         </aside>
       </div>
 
@@ -629,5 +629,31 @@ function ProductPicker({ data, ids, onChange }: { data: CatalogPayload; ids: num
         </>
       )}
     </>
+  );
+}
+
+// The desktop preview lays the card out at a real laptop width, then scales it down to fit the frame,
+// so admins see the actual wide layout instead of a stretched phone card.
+const DESKTOP_W = 1280;
+function PreviewFrame({ device, children }: { device: "phone" | "desktop"; children: ReactNode }) {
+  const frame = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.5);
+  useEffect(() => {
+    const el = frame.current;
+    if (!el || device !== "desktop") return;
+    const ro = new ResizeObserver(() => setScale(Math.min(1, el.clientWidth / DESKTOP_W)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [device]);
+  return (
+    <div ref={frame} className={`adm-catframe is-${device}`} data-cat-scroll>
+      {device === "desktop" ? (
+        <div className="adm-catzoom" style={{ width: DESKTOP_W, zoom: scale }}>
+          {children}
+        </div>
+      ) : (
+        children
+      )}
+    </div>
   );
 }

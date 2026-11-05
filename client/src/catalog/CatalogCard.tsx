@@ -83,7 +83,7 @@ export function CatalogCard({ data, category, pageUrl, mode = "page" }: Props) {
   return (
     <div ref={rootRef} className={`cat cat-bg-${catalog.theme.background} cat-${mode}`} style={style}>
       <div className="cat-col">
-        <Header data={data} category={category} onSave={saveContact} />
+        <Header data={data} category={category} pageUrl={pageUrl} />
 
         {sections.map((key) => (
           <section key={key} className="cat-panel" data-sec={key} id={mode === "page" ? key : undefined} aria-labelledby={`cat-h-${key}`}>
@@ -98,7 +98,7 @@ export function CatalogCard({ data, category, pageUrl, mode = "page" }: Props) {
             {key === "gallery" && <Gallery data={data} />}
             {key === "videos" && <Videos data={data} />}
             {key === "enquiry" && <Enquiry data={data} />}
-            {key === "share" && <Share data={data} pageUrl={pageUrl} onCopy={copy} flash={flash} />}
+            {key === "share" && <Share data={data} pageUrl={pageUrl} onCopy={copy} flash={flash} onSave={saveContact} />}
           </section>
         ))}
 
@@ -129,89 +129,93 @@ export function CatalogCard({ data, category, pageUrl, mode = "page" }: Props) {
   );
 }
 
-/* ---------------- header card ---------------- */
-function Header({ data, category, onSave }: { data: ResolvedCatalog; category: CatalogCategory; onSave: () => void }) {
+/* ---------------- header: shop signboard ---------------- */
+function useQr(text: string, size: number, dark: string) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    let live = true;
+    if (text)
+      import("qrcode").then((QR) => {
+        if (live && canvas.current) QR.toCanvas(canvas.current, text, { width: size, margin: 1, color: { dark, light: "#ffffff" } });
+      });
+    return () => {
+      live = false;
+    };
+  }, [text, size, dark]);
+  return canvas;
+}
+
+// Google Maps share links carry tracking parameters that make the QR denser and harder to scan; drop them.
+function shortMapsUrl(url: string) {
+  if (!url) return "";
+  try {
+    const u = new URL(url);
+    ["entry", "g_ep", "g_st", "utm_source", "utm_medium"].forEach((k) => u.searchParams.delete(k));
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
+function Header({ data, category, pageUrl }: { data: ResolvedCatalog; category: CatalogCategory; pageUrl: string }) {
   const { header } = data.catalog;
   const c = data.contact;
-  const actions = [
-    c.phone && { label: "Call", href: telHref(c.phone), Icon: I.phone },
-    c.whatsapp && { label: "WhatsApp", href: waHref(c.whatsapp, `Hi ${header.businessName}, I'd like to know more.`), Icon: I.whatsapp, ext: true },
-    c.mapsUrl && { label: "Direction", href: c.mapsUrl, Icon: I.direction, ext: true },
-    c.email && { label: "Mail", href: `mailto:${c.email}`, Icon: I.mail },
-  ].filter(Boolean) as { label: string; href: string; Icon: typeof I.phone; ext?: boolean }[];
+  // The board's QR takes people to the shop; without a map link it opens this catalogue instead.
+  const qrTarget = shortMapsUrl(c.mapsUrl) || pageUrl;
+  const qr = useQr(qrTarget, 200, "#17123f");
+  const line = [
+    c.phone && { key: "phone", href: telHref(c.phone), text: c.phoneDisplay || c.phone, Icon: I.phone },
+    c.whatsapp && { key: "wa", href: waHref(c.whatsapp, `Hi ${header.businessName}, I'd like to know more.`), text: "WhatsApp", Icon: I.whatsapp, ext: true },
+    c.email && { key: "mail", href: `mailto:${c.email}`, text: c.email, Icon: I.mail },
+    c.website && { key: "web", href: c.website, text: c.website.replace(/^https?:\/\//, "").replace(/\/$/, ""), Icon: I.globe, ext: true },
+  ].filter(Boolean) as { key: string; href: string; text: string; Icon: typeof I.phone; ext?: boolean }[];
 
   return (
     <header className="cat-hero" data-sec="home">
-      <div className="cat-hero-stripes" aria-hidden="true">
-        <span />
-        <span />
-      </div>
       <a className="cat-back" href={`/#${category}`}>
         <I.back /> Website
       </a>
-      <div className="cat-hero-body">
-        {header.logoUrl && (
-          <div className="cat-logo">
-            <img src={header.logoUrl} alt={`${header.businessName} logo`} />
+      <div className="cat-board">
+        <div className="cat-board-frame">
+          <div className="cat-board-title">
+            {/* The logo carries the business name, so it is the heading; without one, the name is set in type. */}
+            <h1 className={header.logoUrl ? "cat-board-logo" : "cat-name"}>
+              {header.logoUrl ? <img src={header.logoUrl} alt={header.businessName} /> : header.businessName}
+            </h1>
+            {header.personName && (
+              <p className="cat-person">
+                {header.personName}
+                {header.personTitle && <span> · {header.personTitle}</span>}
+              </p>
+            )}
+            {header.tagline && <p className="cat-tagline">{header.tagline}</p>}
           </div>
-        )}
-        <h1 className="cat-name">{header.businessName}</h1>
-        {header.personName && (
-          <p className="cat-person">
-            {header.personName}
-            {header.personTitle && <span> · {header.personTitle}</span>}
-          </p>
-        )}
-        {header.tagline && <p className="cat-tagline">{header.tagline}</p>}
+        </div>
 
-        {actions.length > 0 && (
-          <div className="cat-actions">
-            {actions.map(({ label, href, Icon, ext }) => (
-              <a key={label} className={`cat-action${label === "WhatsApp" ? " is-wa" : ""}`} href={href} {...(ext ? { target: "_blank", rel: "noopener" } : {})}>
-                <Icon /> {label}
-              </a>
+        <figure className="cat-board-qr">
+          <a href={qrTarget} target="_blank" rel="noopener" aria-label={c.mapsUrl ? "Open our location in Google Maps" : "Open this catalogue"}>
+            <canvas ref={qr} width={200} height={200} role="img" aria-label={c.mapsUrl ? "QR code for our location" : "QR code for this catalogue"} />
+          </a>
+          <figcaption>
+            <strong>Scan here</strong>
+            <span>{c.mapsUrl ? "For direct location" : "To open this catalogue"}</span>
+          </figcaption>
+        </figure>
+
+        {line.length > 0 && (
+          <ul className="cat-board-line">
+            {line.map(({ key, href, text, Icon, ext }) => (
+              <li key={key}>
+                <a href={href} {...(ext ? { target: "_blank", rel: "noopener" } : {})}>
+                  <span className="cat-board-ic">
+                    <Icon />
+                  </span>
+                  <span>{text}</span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
-
-        <ul className="cat-info">
-          {c.address && (
-            <li>
-              <span className="cat-info-ic"><I.direction /></span>
-              {c.address}
-            </li>
-          )}
-          {c.phoneDisplay && (
-            <li>
-              <span className="cat-info-ic"><I.phone /></span>
-              <a href={telHref(c.phone)}>{c.phoneDisplay}</a>
-            </li>
-          )}
-          {c.email && (
-            <li>
-              <span className="cat-info-ic"><I.mail /></span>
-              <a href={`mailto:${c.email}`}>{c.email}</a>
-            </li>
-          )}
-          {c.hours && (
-            <li>
-              <span className="cat-info-ic"><I.clock /></span>
-              {c.hours}
-            </li>
-          )}
-          {c.website && (
-            <li>
-              <span className="cat-info-ic"><I.globe /></span>
-              <a href={c.website} target="_blank" rel="noopener">
-                {c.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-              </a>
-            </li>
-          )}
-        </ul>
-
-        <button type="button" className="cat-save" onClick={onSave}>
-          <I.contact /> Save to contacts
-        </button>
       </div>
     </header>
   );
@@ -246,9 +250,11 @@ function About({ data }: { data: ResolvedCatalog }) {
     ["Company name", a.companyName],
     ["Established", a.yearEst],
     ["Nature of business", a.nature],
+    ["Address", data.contact.address],
   ].filter(([, v]) => v);
   return (
-    <>
+    <div className="cat-about">
+      <div>
       {facts.length > 0 && (
         <dl className="cat-facts">
           {facts.map(([k, v]) => (
@@ -259,8 +265,10 @@ function About({ data }: { data: ResolvedCatalog }) {
           ))}
         </dl>
       )}
+      {a.description && <p className="cat-desc">{a.description}</p>}
+      </div>
       {a.specialities.length > 0 && (
-        <>
+        <div>
           <h3 className="cat-h3">Our specialities</h3>
           <ul className="cat-ticks">
             {a.specialities.map((s, i) => (
@@ -270,10 +278,9 @@ function About({ data }: { data: ResolvedCatalog }) {
               </li>
             ))}
           </ul>
-        </>
+        </div>
       )}
-      {a.description && <p className="cat-desc">{a.description}</p>}
-    </>
+    </div>
   );
 }
 
@@ -372,16 +379,17 @@ function Payment({ data, onCopy }: { data: ResolvedCatalog; onCopy: (t: string, 
   );
   return (
     <div className="cat-pay">
-      {quick.length > 0 && (
-        <dl className="cat-pay-list">
-          {quick.map(([k, v]) => <Row key={k} k={k} v={v} />)}
-        </dl>
-      )}
       {p.qrImageUrl && (
         <figure className="cat-pay-qr">
           <img src={p.qrImageUrl} alt="Payment QR code" loading="lazy" />
           <figcaption>Scan to pay</figcaption>
         </figure>
+      )}
+      <div className="cat-pay-main">
+      {quick.length > 0 && (
+        <dl className="cat-pay-list">
+          {quick.map(([k, v]) => <Row key={k} k={k} v={v} />)}
+        </dl>
       )}
       {bank.length > 0 && (
         <>
@@ -391,6 +399,7 @@ function Payment({ data, onCopy }: { data: ResolvedCatalog; onCopy: (t: string, 
           </dl>
         </>
       )}
+      </div>
     </div>
   );
 }
@@ -500,7 +509,30 @@ function Enquiry({ data }: { data: ResolvedCatalog }) {
     </label>
   );
   if (!number) return <p className="cat-desc">Enquiries open once a WhatsApp number is set.</p>;
+  const c = data.contact;
   return (
+    <div className="cat-enq">
+      <div className="cat-enq-info">
+        <p>Fill this in and WhatsApp opens with your message ready to send. Nothing is stored on this page.</p>
+        {(c.phone || c.hours) && (
+          <ul className="cat-enq-list">
+            {c.phone && (
+              <li>
+                <I.phone />
+                <span>
+                  Prefer to talk? <a href={telHref(c.phone)}>Call {c.phoneDisplay || c.phone}</a>
+                </span>
+              </li>
+            )}
+            {c.hours && (
+              <li>
+                <I.clock />
+                <span>{c.hours}</span>
+              </li>
+            )}
+          </ul>
+        )}
+      </div>
     <form className="cat-form" onSubmit={submit} noValidate>
       {field("name", "Your name", <input value={form.name} autoComplete="name" maxLength={80} aria-invalid={!!err.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />)}
       {field("phone", "Phone (optional)", <input value={form.phone} type="tel" inputMode="tel" autoComplete="tel" maxLength={16} aria-invalid={!!err.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />)}
@@ -509,22 +541,25 @@ function Enquiry({ data }: { data: ResolvedCatalog }) {
         <I.whatsapp /> {data.catalog.enquiry.buttonLabel}
       </button>
     </form>
+    </div>
   );
 }
 
-function Share({ data, pageUrl, onCopy, flash }: { data: ResolvedCatalog; pageUrl: string; onCopy: (t: string, w: string) => void; flash: (t: string) => void }) {
-  const canvas = useRef<HTMLCanvasElement>(null);
+function Share({
+  data,
+  pageUrl,
+  onCopy,
+  flash,
+  onSave,
+}: {
+  data: ResolvedCatalog;
+  pageUrl: string;
+  onCopy: (t: string, w: string) => void;
+  flash: (t: string) => void;
+  onSave: () => void;
+}) {
+  const canvas = useQr(pageUrl, 200, data.catalog.theme.primary);
   const [num, setNum] = useState("");
-  useEffect(() => {
-    let live = true;
-    import("qrcode").then((QR) => {
-      if (live && canvas.current)
-        QR.toCanvas(canvas.current, pageUrl, { width: 200, margin: 1, color: { dark: data.catalog.theme.primary, light: "#ffffff" } });
-    });
-    return () => {
-      live = false;
-    };
-  }, [pageUrl, data.catalog.theme.primary]);
 
   const native = async () => {
     if (navigator.share) {
@@ -552,22 +587,26 @@ function Share({ data, pageUrl, onCopy, flash }: { data: ResolvedCatalog; pageUr
 
   return (
     <div className="cat-share">
+      <figure className="cat-qr">
+        <canvas ref={canvas} width={200} height={200} aria-label="QR code for this catalogue" role="img" />
+        <figcaption>Scan to open this catalogue</figcaption>
+      </figure>
+      <div className="cat-share-main">
       <div className="cat-share-link">
         <span>{pageUrl.replace(/^https?:\/\//, "")}</span>
         <button type="button" className="cat-icon-btn" onClick={() => onCopy(pageUrl, "Link")} aria-label="Copy link">
           <I.copy />
         </button>
       </div>
-      <figure className="cat-qr">
-        <canvas ref={canvas} width={200} height={200} aria-label="QR code for this catalogue" role="img" />
-        <figcaption>Scan to open this catalogue</figcaption>
-      </figure>
       <div className="cat-share-btns">
         <button type="button" className="cat-btn" onClick={native}>
           <I.share /> Share
         </button>
         <button type="button" className="cat-btn cat-btn-quiet" onClick={saveQr}>
           <I.download /> Save QR
+        </button>
+        <button type="button" className="cat-btn cat-btn-quiet" onClick={onSave}>
+          <I.contact /> Save contact
         </button>
       </div>
       <form className="cat-share-wa" onSubmit={sendWa}>
@@ -580,6 +619,7 @@ function Share({ data, pageUrl, onCopy, flash }: { data: ResolvedCatalog; pageUr
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 }

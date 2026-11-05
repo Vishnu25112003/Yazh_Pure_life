@@ -58,6 +58,7 @@
   height: 30px;
   width: auto;
   display: block;
+  border-radius: 5px;
 }
 .adm-brand span {
   white-space: nowrap;
@@ -880,6 +881,7 @@ textarea.adm-input {
 .adm-login img {
   height: 44px;
   display: block;
+  border-radius: 7px;
   margin: 0 auto 12px;
 }
 .adm-login h1 {
@@ -1036,6 +1038,8 @@ textarea.adm-input {
 }
 .adm-catframe.is-phone { max-width: 390px; }
 .adm-catframe .cat { min-height: 100%; }
+.adm-catzoom { min-height: 100%; }
+.adm-catzoom .cat { min-height: 100%; }
 
 @media (min-width: 1100px) {
   .adm-catgrid { grid-template-columns: minmax(0, 1fr) 420px; }
