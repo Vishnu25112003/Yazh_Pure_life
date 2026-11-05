@@ -8,7 +8,9 @@ import {
   productCreateSchema,
   productSchema,
   reorderSchema,
+  catalogSchema,
 } from "../schemas.js";
+import * as catalogRepo from "../repo/catalog.js";
 import { uploadMiddleware, uploadToCloudinary, uploadsEnabled } from "../upload.js";
 
 export const adminRouter = Router();
@@ -77,6 +79,11 @@ adminRouter.delete("/products/:category/:id", wrap(async (req, res) => {
   found(await repo.deleteProduct(idParam(req)));
   res.json({ ok: true });
 }));
+
+// ---- Catalogues (one per category) ----
+adminRouter.get("/catalogs/:category", wrap(async (req, res) => res.json(await catalogRepo.getAdminCatalog(category(req)))));
+adminRouter.put("/catalogs/:category", wrap(async (req, res) =>
+  res.json(await catalogRepo.updateCatalog(category(req), parse(catalogSchema, req.body)))));
 
 // ---- Image upload (Cloudinary). Accepts 1-20 files in the "files" field; ?section= picks the folder. ----
 adminRouter.post("/upload", (req, res, next) => {

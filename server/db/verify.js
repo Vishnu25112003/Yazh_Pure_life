@@ -9,8 +9,13 @@ import { resolveSite } from "../src/resolve.js";
 // Proves nothing was lost: the public payload built from PostgreSQL must equal the original site.json.
 const SITE_JSON = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../data/site.json");
 
-const expected = resolveSite(JSON.parse(await fs.readFile(SITE_JSON, "utf8")));
+const original = JSON.parse(await fs.readFile(SITE_JSON, "utf8"));
+// The external mycrd catalogue link was retired; it stays in the database but is no longer published.
+delete original.contact.mycrd;
+const expected = resolveSite(original);
 const actual = await buildPublicSite();
+// Database-only additions that never existed in site.json.
+delete actual.catalogs;
 
 let bad = 0;
 for (const key of Object.keys(expected)) {

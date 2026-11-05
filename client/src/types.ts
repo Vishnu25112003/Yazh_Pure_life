@@ -5,7 +5,6 @@ export interface Contact {
   email: string;
   address: string;
   hours: string;
-  mycrd: string;
 }
 
 export interface Branch {
@@ -49,4 +48,6 @@ export interface SiteData {
   whyChooseUs: WhyItem[];
   ownBrand: string;
   serviceBrands: BrandGroup[];
+  /** Home-page buttons for the per-category catalogue pages (/catalog/<category>). */
+  catalogs?: Partial<Record<"domestic" | "commercial" | "dispenser", { label: string; published: boolean }>>;
 }

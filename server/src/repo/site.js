@@ -1,5 +1,6 @@
 import { query } from "../../db/pool.js";
 import { resolveSite } from "../resolve.js";
+import { catalogSummaries } from "./catalog.js";
 
 export const PRODUCT_SECTION_KEYS = {
   domestic: "domesticProducts",
@@ -9,7 +10,7 @@ export const PRODUCT_SECTION_KEYS = {
 
 // Builds the exact JSON shape the public client expects (see client/src/types.ts SiteData).
 export async function buildPublicSite() {
-  const [contact, branches, products, gallery, content] = await Promise.all([
+  const [contact, branches, products, gallery, content, catalogs] = await Promise.all([
     query("SELECT * FROM site_settings WHERE id = 1"),
     query("SELECT name, tag, address, maps_url FROM branches WHERE is_active ORDER BY sort_order, id"),
     query(
@@ -17,6 +18,11 @@ export async function buildPublicSite() {
     ),
     query("SELECT image_url, name FROM gallery_images WHERE is_active ORDER BY sort_order, id"),
     query("SELECT key, value FROM site_content"),
+    // Never let the catalogue buttons take the whole site down (e.g. before migration 003 runs).
+    catalogSummaries().catch((err) => {
+      console.error("[catalogs] summary unavailable:", err.message);
+      return {};
+    }),
   ]);
 
   const c = contact.rows[0];
@@ -28,7 +34,6 @@ export async function buildPublicSite() {
       email: c.email,
       address: c.address,
       hours: c.hours,
-      mycrd: c.mycrd,
     },
     branches: branches.rows.map((b) => ({ name: b.name, tag: b.tag, address: b.address, mapsUrl: b.maps_url })),
     domesticProducts: [],
@@ -46,6 +51,7 @@ export async function buildPublicSite() {
     });
   }
   for (const row of content.rows) site[row.key] = row.value;
+  site.catalogs = catalogs;
 
   return resolveSite(site);
 }

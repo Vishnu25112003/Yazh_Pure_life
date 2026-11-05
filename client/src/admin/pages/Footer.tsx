@@ -68,7 +68,6 @@ function ContactTab() {
         </div>
         {text("address", "Main address", { area: true, max: 400 })}
         {text("hours", "Opening hours", { hint: "e.g. Mon – Sat, 9:00 AM – 8:00 PM", max: 120 })}
-        {text("mycrd", "Catalogue link", { type: "url", inputMode: "url", hint: "Full link starting with https://", max: 2000 })}
         <div className="adm-savebar">
           <button className="adm-btn adm-btn-primary" disabled={busy}>
             {busy ? "Saving…" : "Save contact details"}

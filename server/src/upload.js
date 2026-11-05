@@ -14,7 +14,7 @@ export const uploadMiddleware = multer({
     ALLOWED.has(file.mimetype) ? cb(null, true) : cb(new HttpError(400, "Only JPG, PNG, WebP, GIF or AVIF images are allowed")),
 }).array("files", 20);
 
-const SECTIONS = new Set(["domestic", "commercial", "dispenser", "gallery"]);
+const SECTIONS = new Set(["domestic", "commercial", "dispenser", "gallery", "catalog"]);
 
 // Uploads one in-memory file to Cloudinary and returns an auto-optimised (format + quality) delivery URL.
 export function uploadToCloudinary(file, section) {

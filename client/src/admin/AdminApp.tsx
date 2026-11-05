@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./admin.css";
 import { AuthProvider, useAuth } from "./auth";
 import { Layout } from "./Layout";
+import { CatalogEditor } from "./pages/CatalogEditor";
 import { Dashboard } from "./pages/Dashboard";
 import { FooterPage } from "./pages/Footer";
 import { GalleryPage } from "./pages/Gallery";
@@ -24,6 +25,7 @@ function Gate() {
           <Route key={c} path={c}>
             <Route index element={<ProductsPage category={c} />} />
             <Route path="new" element={<ProductForm category={c} />} />
+            <Route path="catalog" element={<CatalogEditor category={c} />} />
             <Route path=":id" element={<ProductForm category={c} />} />
           </Route>
         ))}

@@ -140,9 +140,6 @@ export function Footer() {
             <a href="#commercial"><span className="ypl-shine">Commercial</span></a>
             <a href="#dispenser"><span className="ypl-shine">Dispenser</span></a>
             <a href="#gallery"><span className="ypl-shine">Gallery</span></a>
-            <a href={CONTACT.mycrd} target="_blank" rel="noopener">
-              <span className="ypl-shine">Digital card</span>
-            </a>
           </nav>
           <div className="footer-copy">© 2026 Yazh Pure Life. All rights reserved.</div>
         </div>

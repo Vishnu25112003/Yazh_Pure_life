@@ -44,7 +44,6 @@ export interface Contact {
   email: string;
   address: string;
   hours: string;
-  mycrd: string;
 }
 
 export interface Dashboard {
