@@ -20,6 +20,9 @@ export interface Product {
   spec: string;
   src: string;
   points?: string[];
+  /** Whole rupees, only present when set in admin. */
+  mrp?: number;
+  price?: number;
 }
 
 export interface GalleryItem {

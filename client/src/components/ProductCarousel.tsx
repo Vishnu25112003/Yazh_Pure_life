@@ -4,6 +4,7 @@ import { telLink, waLink } from "../data";
 import { useSite } from "../site";
 import type { Product } from "../types";
 import { ChevronRightIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from "./icons";
+import { OffBadge, PriceTag } from "./PriceTag";
 import { ProductImage } from "./ProductImage";
 
 function productUrl(id: string) {
@@ -80,14 +81,18 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         <button type="button" className="btn btn-icon absolute right-3 top-3 z-10" aria-label="Close" onClick={onClose}>
           <CloseIcon />
         </button>
-        <ProductImage
-          label={product.label}
-          src={product.src}
-          className="w-full h-[280px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
-        />
+        <div className="relative">
+          <ProductImage
+            label={product.label}
+            src={product.src}
+            className="w-full h-[280px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
+          />
+          <OffBadge mrp={product.mrp} price={product.price} />
+        </div>
         <div>
           <h3 className="m-0">{product.label}</h3>
           <p className="m-0 mt-1 opacity-80">{product.spec}</p>
+          <PriceTag mrp={product.mrp} price={product.price} size="lg" className="mt-2" />
           {product.points && (
             <ul className="m-0 mt-2 pl-5 grid gap-1 text-sm">
               {product.points.map((pt) => (
@@ -224,11 +229,13 @@ export function ProductCarousel({
                     src={p.src}
                     className="w-full h-[150px] dsk:h-[190px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
                   />
+                  <OffBadge mrp={p.mrp} price={p.price} />
                 </div>
                 <div className="text-sm text-center font-semibold whitespace-normal break-words leading-tight">
                   {p.label}
                 </div>
                 <div className="text-xs text-center opacity-70 leading-tight">{p.spec}</div>
+                <PriceTag mrp={p.mrp} price={p.price} />
                 <div className="mt-auto pt-1 flex justify-center">
                   <ShareButton product={p} className="chip-link" />
                 </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { I, LINK_ICON } from "./icons";
+import { formatINR, priceView } from "../price";
 import { buildVCard, telHref, waHref, youtubeId, type ResolvedCatalog } from "./resolve";
 import { SECTION_LABEL, type CatalogCategory, type SectionKey } from "./types";
 import "./catalog.css";
@@ -304,7 +305,7 @@ function Documents({ data }: { data: ResolvedCatalog }) {
 }
 
 function Products({ data, pageUrl, onCopy }: { data: ResolvedCatalog; pageUrl: string; onCopy: (t: string, w: string) => void }) {
-  const { showSpec, showPoints } = data.catalog.products;
+  const { showSpec, showPoints, showPrice = true } = data.catalog.products;
   const share = async (slug: string, label: string) => {
     const url = `${pageUrl}#p-${slug}`;
     if (navigator.share) {
@@ -319,12 +320,30 @@ function Products({ data, pageUrl, onCopy }: { data: ResolvedCatalog; pageUrl: s
   };
   return (
     <ul className="cat-products">
-      {data.products.map((p) => (
+      {data.products.map((p) => {
+        const pv = showPrice ? priceView(p.mrp, p.price) : null;
+        return (
         <li key={p.id} id={`p-${p.id}`} className="cat-product">
           <h3 className="cat-product-name">{p.label}</h3>
           <div className="cat-product-img">
             <img src={p.src} alt={p.label} loading="lazy" />
+            {pv?.off && <span className="cat-off">{pv.off}% OFF</span>}
           </div>
+          {pv && (
+            <p className="cat-price">
+              <span className="cat-price-now">
+                {pv.isMrpOnly ? <span className="cat-price-label">MRP </span> : pv.was && <span className="cat-sr">Offer price </span>}
+                {formatINR(pv.now)}
+              </span>
+              {pv.was && (
+                <s className="cat-price-was">
+                  <span className="cat-sr">MRP </span>
+                  {formatINR(pv.was)}
+                </s>
+              )}
+              {pv.was && <span className="cat-price-save">Save {formatINR(pv.was - pv.now)}</span>}
+            </p>
+          )}
           {showSpec && p.spec && <p className="cat-product-spec">{p.spec}</p>}
           {showPoints && p.points.length > 0 && (
             <ul className="cat-ticks cat-ticks-sm">
@@ -347,7 +366,8 @@ function Products({ data, pageUrl, onCopy }: { data: ResolvedCatalog; pageUrl: s
             )}
           </div>
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }

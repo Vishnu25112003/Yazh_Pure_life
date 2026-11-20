@@ -1,3 +1,4 @@
+import { formatINR, priceView } from "../../price";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
@@ -41,6 +42,8 @@ export function ProductsPage({ category }: { category: Category }) {
         spec: p.spec,
         imageUrl: p.imageUrl,
         points: p.points,
+        mrp: p.mrp,
+        price: p.price,
         isActive: !p.isActive,
       });
       setData(data.map((x) => (x.id === p.id ? updated : x)));
@@ -108,6 +111,7 @@ export function ProductsPage({ category }: { category: Category }) {
                     {!p.isActive && <span className="adm-badge">Hidden</span>}
                   </div>
                   <div className="adm-row-sub">{p.spec}</div>
+                  <AdminPrice mrp={p.mrp} price={p.price} />
                 </div>
                 <div className="adm-row-actions">
                   <button
@@ -151,5 +155,19 @@ export function ProductsPage({ category }: { category: Category }) {
         </ul>
       )}
     </>
+  );
+}
+
+// Price line in the list: "₹12,999  ₹18,500  29% off", or a quiet "No price" so missing ones stand out.
+function AdminPrice({ mrp, price }: { mrp: number | null; price: number | null }) {
+  const v = priceView(mrp, price);
+  if (!v) return <div className="adm-row-price is-empty">No price set</div>;
+  return (
+    <div className="adm-row-price">
+      {v.isMrpOnly && <span>MRP </span>}
+      <strong>{formatINR(v.now)}</strong>
+      {v.was && <s>{formatINR(v.was)}</s>}
+      {v.off ? <span className="adm-row-off">{v.off}% off</span> : null}
+    </div>
   );
 }

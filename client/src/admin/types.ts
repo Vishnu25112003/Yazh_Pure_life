@@ -8,12 +8,15 @@ export interface Product {
   spec: string;
   imageUrl: string;
   points: string[];
+  /** Whole rupees; null = not set. */
+  mrp: number | null;
+  price: number | null;
   sortOrder: number;
   isActive: boolean;
   updatedAt: string;
 }
 
-export type ProductInput = Pick<Product, "slug" | "label" | "spec" | "imageUrl" | "points" | "isActive">;
+export type ProductInput = Pick<Product, "slug" | "label" | "spec" | "imageUrl" | "points" | "isActive" | "mrp" | "price">;
 
 export interface Branch {
   id: number;

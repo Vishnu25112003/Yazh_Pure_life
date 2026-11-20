@@ -15,7 +15,7 @@ export interface Catalog {
   links: { type: LinkType; label: string; sub: string; url: string }[];
   about: { companyName: string; yearEst: string; nature: string; specialities: string[]; description: string };
   documents: { title: string; url: string }[];
-  products: { mode: "all" | "selected"; productIds: number[]; showSpec: boolean; showPoints: boolean };
+  products: { mode: "all" | "selected"; productIds: number[]; showSpec: boolean; showPoints: boolean; showPrice: boolean };
   payment: {
     phonePe: string;
     gpay: string;
@@ -50,6 +50,8 @@ export interface CatalogProductInput {
   src: string;
   points: string[];
   isActive: boolean;
+  mrp: number | null;
+  price: number | null;
 }
 
 /** What GET /api/catalog/:category returns (the admin GET adds isPublished/updatedAt). */

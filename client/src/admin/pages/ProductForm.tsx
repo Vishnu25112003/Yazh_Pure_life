@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { formatINR, priceView } from "../../price";
 import { api } from "../api";
 import { ImageUpload } from "../ImageUpload";
 import { PointsEditor } from "../PointsEditor";
@@ -15,7 +16,14 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);
 
-const EMPTY: ProductInput = { slug: "", label: "", spec: "", imageUrl: "", points: [], isActive: true };
+const EMPTY: ProductInput = { slug: "", label: "", spec: "", imageUrl: "", points: [], isActive: true, mrp: null, price: null };
+
+// Rupee inputs are typed as text so "12,999" or "₹ 12999" both work; anything else is reported, not guessed.
+const toRupees = (s: string): number | null | "bad" => {
+  const t = s.replace(/[₹,\s]/g, "");
+  if (!t) return null;
+  return /^\d+$/.test(t) && Number(t) > 0 ? Number(t) : "bad";
+};
 
 export function ProductForm({ category }: { category: Category }) {
   const meta = PRODUCT_SECTIONS[category];
@@ -28,6 +36,8 @@ export function ProductForm({ category }: { category: Category }) {
   const config = useLoad(() => api.get<{ uploadsEnabled: boolean }>("/config"));
 
   const [form, setForm] = useState<ProductInput>(EMPTY);
+  const [mrpText, setMrpText] = useState("");
+  const [priceText, setPriceText] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
@@ -35,7 +45,11 @@ export function ProductForm({ category }: { category: Category }) {
   useEffect(() => {
     if (!editing || !list.data) return;
     const p = list.data.find((x) => String(x.id) === id);
-    if (p) setForm({ slug: p.slug, label: p.label, spec: p.spec, imageUrl: p.imageUrl, points: p.points, isActive: p.isActive });
+    if (p) {
+      setForm({ slug: p.slug, label: p.label, spec: p.spec, imageUrl: p.imageUrl, points: p.points, isActive: p.isActive, mrp: p.mrp, price: p.price });
+      setMrpText(p.mrp ? String(p.mrp) : "");
+      setPriceText(p.price ? String(p.price) : "");
+    }
   }, [list.data, editing, id]);
 
   const set = <K extends keyof ProductInput>(key: K, value: ProductInput[K]) => setForm((f) => ({ ...f, [key]: value }));
@@ -54,9 +68,20 @@ export function ProductForm({ category }: { category: Category }) {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
+    const mrp = toRupees(mrpText);
+    const price = toRupees(priceText);
+    const local: Record<string, string> = {};
+    if (mrp === "bad") local.mrp = "Enter the MRP in whole rupees, e.g. 18500";
+    if (price === "bad") local.price = "Enter the offer price in whole rupees, e.g. 12999";
+    if (typeof mrp === "number" && typeof price === "number" && price > mrp) local.price = "Offer price can't be more than the MRP";
+    if (Object.keys(local).length) {
+      setErrors(local);
+      toast("Check the price fields", true);
+      return;
+    }
     setBusy(true);
     setErrors({});
-    const body = { ...form, points: form.points.map((p) => p.trim()).filter(Boolean) };
+    const body = { ...form, mrp, price, points: form.points.map((p) => p.trim()).filter(Boolean) };
     try {
       if (editing) await api.put(`/products/${category}/${id}`, body);
       else await api.post(`/products/${category}`, body);
@@ -142,6 +167,32 @@ export function ProductForm({ category }: { category: Category }) {
         <Switch checked={form.isActive} onChange={(v) => set("isActive", v)} label={form.isActive ? "Visible on the website" : "Hidden from the website"} />
         </div>
 
+        <div className="adm-card">
+          <h2>Price</h2>
+          <p className="adm-note">Leave both empty to show no price. With both set, the MRP is shown struck through next to the offer price.</p>
+          <div className="adm-cols">
+            <Field label="MRP (₹)" htmlFor="mrp" error={errors.mrp} hint="Printed maximum retail price.">
+              <span className="adm-money">
+                <span aria-hidden="true">₹</span>
+                <input id="mrp" className="adm-input" inputMode="numeric" autoComplete="off" placeholder="18500" value={mrpText} aria-invalid={!!errors.mrp} onChange={(e) => {
+                    setMrpText(e.target.value);
+                    setErrors(({ mrp: _m, price: _p, ...rest }) => rest);
+                  }} />
+              </span>
+            </Field>
+            <Field label="Offer price (₹)" htmlFor="price" error={errors.price} hint="What the customer pays.">
+              <span className="adm-money">
+                <span aria-hidden="true">₹</span>
+                <input id="price" className="adm-input" inputMode="numeric" autoComplete="off" placeholder="12999" value={priceText} aria-invalid={!!errors.price} onChange={(e) => {
+                    setPriceText(e.target.value);
+                    setErrors(({ mrp: _m, price: _p, ...rest }) => rest);
+                  }} />
+              </span>
+            </Field>
+          </div>
+          <PricePreview mrpText={mrpText} priceText={priceText} />
+        </div>
+
         <div className="adm-savebar">
           <Link to={`/${category}`} className="adm-btn">
             Cancel
@@ -152,5 +203,29 @@ export function ProductForm({ category }: { category: Category }) {
         </div>
       </form>
     </>
+  );
+}
+
+// Shows the price exactly as the website will, while typing.
+function PricePreview({ mrpText, priceText }: { mrpText: string; priceText: string }) {
+  const m = toRupees(mrpText);
+  const p = toRupees(priceText);
+  if (m === "bad" || p === "bad") return null;
+  if (typeof m === "number" && typeof p === "number" && p > m) return null;
+  const v = priceView(m, p);
+  return (
+    <div className="adm-pricepreview" aria-live="polite">
+      <span className="adm-pricepreview-label">On the website</span>
+      {v ? (
+        <div className="adm-pricepreview-row">
+          {v.isMrpOnly && <span className="adm-pricepreview-mrp">MRP</span>}
+          <strong>{formatINR(v.now)}</strong>
+          {v.was && <s>{formatINR(v.was)}</s>}
+          {v.off ? <span className="adm-row-off">{v.off}% off</span> : null}
+        </div>
+      ) : (
+        <div className="adm-pricepreview-row is-empty">No price shown</div>
+      )}
+    </div>
   );
 }

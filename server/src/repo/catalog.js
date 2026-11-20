@@ -8,7 +8,7 @@ async function catalogInputs(category, { includeHidden = false } = {}) {
     query("SELECT phone, phone_display, whatsapp, email, address, hours FROM site_settings WHERE id = 1"),
     query("SELECT maps_url FROM branches WHERE is_active ORDER BY sort_order, id LIMIT 1"),
     query(
-      `SELECT id, slug, label, spec, image_url, points, is_active FROM products
+      `SELECT id, slug, label, spec, image_url, points, is_active, mrp, price FROM products
        WHERE category = $1 ${includeHidden ? "" : "AND is_active"} ORDER BY sort_order, id`,
       [category]
     ),
@@ -32,6 +32,8 @@ async function catalogInputs(category, { includeHidden = false } = {}) {
       spec: p.spec,
       src: p.image_url,
       points: p.points ?? [],
+      mrp: p.mrp ?? null,
+      price: p.price ?? null,
       isActive: p.is_active,
     })),
     gallery: gallery.rows.map((g) => ({ src: g.image_url, name: g.name })),
