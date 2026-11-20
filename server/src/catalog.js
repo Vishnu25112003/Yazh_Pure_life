@@ -59,7 +59,7 @@ export function catalogDefaults(category) {
       description: DESCRIPTION,
     },
     documents: [],
-    products: { mode: "all", productIds: [], showSpec: true, showPoints: true },
+    products: { mode: "all", productIds: [], showSpec: true, showPoints: true, showPrice: true },
     payment: {
       phonePe: "",
       gpay: "",

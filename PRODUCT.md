@@ -22,7 +22,7 @@ A local dealer with its own brand and its own technicians across four branches: 
 
 ## Capabilities and Constraints
 - React + Vite client, Express + PostgreSQL (Neon) server, Cloudinary image upload. Admin edits everything; the database is the source of truth.
-- **No prices are shown** on the site or catalogues. Customers enquire for prices.
+- **Prices are optional, per product.** Admin can set an MRP and an offer price (whole rupees). When both are set, the offer price is shown with the MRP struck through and the % saved. Products without prices show none, and each catalogue can hide prices with its "Show prices" switch. Never invent a price.
 - The phone, WhatsApp number and address in the data are **placeholders** until the owner sets real ones in admin.
 
 ## Brand Commitments
@@ -35,5 +35,5 @@ The name "Yazh Pure Life" and the existing logo (`client/public/assets/logo.png`
 ## Product Principles
 1. Every page leads to a call or a WhatsApp message in one tap.
 2. Phone first: most visitors arrive from a WhatsApp share.
-3. Only real content: no invented proof, and no prices.
+3. Only real content: no invented proof, and only the prices the owner enters.
 4. The owner can change anything from admin without a developer.

@@ -41,7 +41,17 @@ export const branchSchema = z.object({
   isActive,
 });
 
-export const productSchema = z.object({
+// Whole rupees. null clears the price; leaving the field out keeps what is stored.
+const rupees = (label) =>
+  z
+    .number({ error: `${label} must be a number` })
+    .int(`${label} must be in whole rupees`)
+    .positive(`${label} must be more than 0`)
+    .max(10_000_000, `${label} looks too large`)
+    .nullable()
+    .optional();
+
+const productFields = z.object({
   slug: text("Slug", 80).refine((v) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v), "Use lowercase letters, numbers and hyphens only"),
   label: text("Name", 120),
   spec: text("Spec line", 200),
@@ -51,11 +61,20 @@ export const productSchema = z.object({
     .max(12, "At most 12 key points")
     .default([]),
   isActive,
+  mrp: rupees("MRP"),
+  price: rupees("Offer price"),
 });
 
-export const productCreateSchema = productSchema.extend({
-  category: z.enum(["domestic", "commercial", "dispenser"]),
-});
+const offerNotAboveMrp = (d, ctx) => {
+  if (d.mrp != null && d.price != null && d.price > d.mrp)
+    ctx.addIssue({ code: "custom", path: ["price"], message: "Offer price can't be more than the MRP" });
+};
+
+export const productSchema = productFields.superRefine(offerNotAboveMrp);
+
+export const productCreateSchema = productFields
+  .extend({ category: z.enum(["domestic", "commercial", "dispenser"]) })
+  .superRefine(offerNotAboveMrp);
 
 export const galleryItemSchema = z.object({
   imageUrl,
@@ -129,6 +148,7 @@ export const catalogSchema = z.object({
       productIds: z.array(z.number().int().positive()).max(200),
       showSpec: z.boolean(),
       showPoints: z.boolean(),
+      showPrice: z.boolean().default(true),
     }),
     payment: z.object({
       phonePe: opt("PhonePe number", 20),

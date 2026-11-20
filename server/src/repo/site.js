@@ -14,7 +14,7 @@ export async function buildPublicSite() {
     query("SELECT * FROM site_settings WHERE id = 1"),
     query("SELECT name, tag, address, maps_url FROM branches WHERE is_active ORDER BY sort_order, id"),
     query(
-      "SELECT slug, category, label, spec, image_url, points FROM products WHERE is_active ORDER BY category, sort_order, id"
+      "SELECT slug, category, label, spec, image_url, points, mrp, price FROM products WHERE is_active ORDER BY category, sort_order, id"
     ),
     query("SELECT image_url, name FROM gallery_images WHERE is_active ORDER BY sort_order, id"),
     query("SELECT key, value FROM site_content"),
@@ -48,6 +48,9 @@ export async function buildPublicSite() {
       spec: p.spec,
       src: p.image_url,
       ...(p.points?.length ? { points: p.points } : {}),
+      // Prices appear only when admin has set them.
+      ...(p.mrp != null ? { mrp: p.mrp } : {}),
+      ...(p.price != null ? { price: p.price } : {}),
     });
   }
   for (const row of content.rows) site[row.key] = row.value;

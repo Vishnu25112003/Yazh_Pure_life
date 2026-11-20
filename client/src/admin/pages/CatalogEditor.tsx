@@ -280,6 +280,11 @@ export function CatalogEditor({ category }: { category: Category }) {
         <div className="adm-switches">
           <Switch checked={form.products.showSpec} onChange={(v) => updIn("products", { showSpec: v })} label="Show spec line" />
           <Switch checked={form.products.showPoints} onChange={(v) => updIn("products", { showPoints: v })} label="Show key points" />
+          <Switch
+            checked={form.products.showPrice !== false}
+            onChange={(v) => updIn("products", { showPrice: v })}
+            label="Show prices (MRP and offer price, set on each product)"
+          />
         </div>
         {form.products.mode === "all" ? (
           <p className="adm-note">

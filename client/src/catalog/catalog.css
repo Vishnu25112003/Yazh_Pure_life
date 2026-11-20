@@ -244,6 +244,27 @@ html:has(.cat-page) { scroll-padding-top: 0; }
   overflow: hidden;
 }
 .cat-product-img img { position: absolute; inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); object-fit: contain; }
+/* prices: offer in bold, MRP struck through, saving in the accent colour */
+.cat-off {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--cat-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+}
+.cat-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 14px 0 0; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.cat-price-now { font-family: var(--font-heading, "Barlow Condensed", sans-serif); font-size: 30px; font-weight: 700; color: var(--cat-ink); }
+.cat-price-label { font-family: var(--font-body, "Barlow", sans-serif); font-size: 15px; font-weight: 600; color: var(--cat-ink-2); }
+.cat-price-was { font-size: 17px; color: var(--cat-ink-2); text-decoration-thickness: 1.5px; }
+.cat-price-save { font-size: 15px; font-weight: 700; color: color-mix(in srgb, var(--cat-accent) 80%, #000); }
+.cat-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.cat-price + .cat-product-spec { margin-top: 6px; }
 .cat-product-spec { margin: 12px 0 0; font-weight: 600; }
 .cat-product-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
 
