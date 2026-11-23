@@ -1,3 +1,4 @@
+import type { ProductVariant } from "../types";
 export type Category = "domestic" | "commercial" | "dispenser";
 
 export interface Product {
@@ -11,12 +12,14 @@ export interface Product {
   /** Whole rupees; null = not set. */
   mrp: number | null;
   price: number | null;
+  /** Colour variants, each with its own photo; empty = single-colour product. */
+  variants: ProductVariant[];
   sortOrder: number;
   isActive: boolean;
   updatedAt: string;
 }
 
-export type ProductInput = Pick<Product, "slug" | "label" | "spec" | "imageUrl" | "points" | "isActive" | "mrp" | "price">;
+export type ProductInput = Pick<Product, "slug" | "label" | "spec" | "imageUrl" | "points" | "isActive" | "mrp" | "price" | "variants">;
 
 export interface Branch {
   id: number;

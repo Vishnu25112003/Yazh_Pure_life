@@ -14,6 +14,14 @@ export interface Branch {
   mapsUrl: string;
 }
 
+/** One colour of a product, with its own photo. */
+export interface ProductVariant {
+  name: string;
+  /** Swatch colour, #rrggbb. */
+  color: string;
+  imageUrl: string;
+}
+
 export interface Product {
   id: string;
   label: string;
@@ -23,6 +31,8 @@ export interface Product {
   /** Whole rupees, only present when set in admin. */
   mrp?: number;
   price?: number;
+  /** Colour variants, only present when set in admin. The first colour shows first. */
+  variants?: ProductVariant[];
 }
 
 export interface GalleryItem {

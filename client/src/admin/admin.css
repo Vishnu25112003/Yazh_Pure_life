@@ -616,7 +616,14 @@ textarea.adm-input {
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     align-items: start;
   }
+  /* Main photo stays in the right column beside every left-hand card (details, price, colours),
+     so its sticky panel never slides over another card. */
+  .adm-formgrid > .adm-card {
+    grid-column: 1;
+  }
   .adm-formgrid .adm-side {
+    grid-column: 2;
+    grid-row: 1 / span 3;
     position: sticky;
     top: calc(var(--adm-top-h) + 16px);
   }
@@ -1073,3 +1080,64 @@ textarea.adm-input {
 .adm-row-price s { opacity: 0.6; }
 .adm-row-price.is-empty { font-size: 13px; opacity: 0.55; }
 .adm-row-off { padding: 1px 8px; border-radius: 999px; background: var(--color-accent-2-100); color: var(--color-accent-2-800); font-size: 12px; font-weight: 700; }
+
+/* — colour variants on the product form — */
+.adm-variants { display: grid; gap: 12px; }
+.adm-variant {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  background: #ffffff;
+  min-width: 0;
+}
+.adm-variant-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.adm-variant-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-text);
+}
+.adm-variant-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.2);
+}
+.adm-variant-btns { display: flex; gap: 4px; }
+/* A colour's photo is a check, not the hero: keep it to a thumbnail beside its buttons. */
+.adm-variant .adm-img:has(.adm-img-preview) { grid-template-columns: 112px minmax(0, 1fr); align-items: center; column-gap: 12px; }
+.adm-variant .adm-img-preview { width: 112px; height: 112px; max-width: none; aspect-ratio: auto; grid-row: span 2; }
+.adm-variant .adm-img:has(.adm-img-preview) > :not(.adm-img-preview) { grid-column: 2; }
+.adm-variant-fields { display: grid; grid-template-columns: minmax(0, 1fr) 170px; gap: 12px; }
+@media (max-width: 560px) { .adm-variant-fields { grid-template-columns: 1fr; } }
+.adm-swatchpick { display: flex; gap: 8px; align-items: center; }
+.adm-swatchpick input[type="color"] {
+  flex: none;
+  width: 44px;
+  height: 40px;
+  padding: 2px;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+}
+.adm-swatchpick .adm-input { font-family: ui-monospace, monospace; text-transform: lowercase; }
+.adm-variant-preview { display: grid; gap: 8px; padding: 12px 14px; border-radius: 10px; background: var(--color-accent-100); }
+.adm-variant-preview-body { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; --swatch-gap: var(--color-accent-100); }
+.adm-variant-preview-body img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--color-divider);
+}
+.adm-row-colors { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 12px; color: color-mix(in srgb, var(--color-text) 65%, transparent); }
+.adm-row-colors i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.2); }
+.adm-row-colors span { margin-left: 4px; }

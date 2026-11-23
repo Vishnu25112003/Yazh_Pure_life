@@ -564,3 +564,11 @@ html:has(.cat-page) { scroll-padding-top: 0; }
 @keyframes cat-pulse { to { opacity: 0.45; } }
 .cat-empty { margin-top: 12vh; }
 .cat-empty-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+/* colour swatches on a product: ring in the catalogue's own colour, gap matches the card tone */
+.cat-product .cat-swatches { --swatch-ring: var(--cat-primary); --swatch-gap: var(--cat-tone); margin: 0 0 10px; }
+/* +91 mobile box inside the catalogue's own field style */
+.cat-field .ypl-tel { gap: 6px; }
+.cat-field .ypl-tel-cc { padding: 0 14px; border: 0; border-radius: 10px; background: var(--cat-tone-2, #e6eef7); color: var(--cat-ink); font-size: 16px; }
+.cat-field .ypl-tel > input { border-radius: 10px; }
+.cat-field .ypl-tel[data-invalid] > input { box-shadow: inset 0 0 0 2px #b42318; } /* taste-skill-ignore: form-field error ring */
+.cat-field .ypl-tel[data-invalid] .ypl-tel-cc { box-shadow: none; }

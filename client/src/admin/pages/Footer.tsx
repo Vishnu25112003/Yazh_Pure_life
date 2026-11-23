@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { api } from "../api";
 import type { Branch, BranchInput, Contact } from "../types";
 import { errMsg, Field, fieldErrors, Icons, PageHead, Sheet, Spinner, Switch, useLoad, useUi } from "../ui";
+import { cleanByMode } from "../../inputRules";
 
 /* ---------------- Contact ---------------- */
 function ContactTab() {
@@ -25,7 +26,7 @@ function ContactTab() {
   const text = (k: keyof Contact, label: string, props: { hint?: string; type?: string; inputMode?: "tel" | "email" | "url" | "numeric"; max?: number; area?: boolean } = {}) => (
     <Field label={label} htmlFor={`c-${k}`} error={errors[k]} hint={props.hint}>
       {props.area ? (
-        <textarea id={`c-${k}`} className="adm-input" value={form[k]} maxLength={props.max} aria-invalid={!!errors[k]} onChange={(e) => set(k, e.target.value)} />
+        <textarea id={`c-${k}`} className="adm-input" value={form[k]} maxLength={props.max} aria-invalid={!!errors[k]} onChange={(e) => set(k, cleanByMode(undefined, e.target.value))} />
       ) : (
         <input
           id={`c-${k}`}
@@ -35,7 +36,7 @@ function ContactTab() {
           value={form[k]}
           maxLength={props.max}
           aria-invalid={!!errors[k]}
-          onChange={(e) => set(k, e.target.value)}
+          onChange={(e) => set(k, cleanByMode(props.inputMode, e.target.value))}
         />
       )}
     </Field>

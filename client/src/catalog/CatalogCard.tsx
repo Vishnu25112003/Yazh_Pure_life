@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { I, LINK_ICON } from "./icons";
 import { formatINR, priceView } from "../price";
+import { ColorSwatches, variantImage } from "../components/ColorSwatches";
+import { MobileInput } from "../components/MobileInput";
+import { check, clean, cleanMobile, formatMobile } from "../inputRules";
 import { buildVCard, telHref, waHref, youtubeId, type ResolvedCatalog } from "./resolve";
 import { SECTION_LABEL, type CatalogCategory, type SectionKey } from "./types";
 import "./catalog.css";
@@ -304,6 +307,73 @@ function Documents({ data }: { data: ResolvedCatalog }) {
   );
 }
 
+// One product card; keeps its own chosen colour so the swatches can switch the photo.
+function CatalogProduct({
+  p,
+  data,
+  showSpec,
+  showPoints,
+  showPrice,
+  onShare,
+}: {
+  p: ResolvedCatalog["products"][number];
+  data: ResolvedCatalog;
+  showSpec: boolean;
+  showPoints: boolean;
+  showPrice: boolean;
+  onShare: (slug: string, label: string) => void;
+}) {
+  const [color, setColor] = useState(0);
+  const colorName = p.variants?.[color]?.name;
+  const pv = showPrice ? priceView(p.mrp, p.price) : null;
+  return (
+      <li id={`p-${p.id}`} className="cat-product">
+        <h3 className="cat-product-name">{p.label}</h3>
+        <div className="cat-product-img">
+          <img src={variantImage(p.src, p.variants, color)} alt={colorName ? `${p.label} in ${colorName}` : p.label} loading="lazy" />
+          {pv?.off && <span className="cat-off">{pv.off}% OFF</span>}
+        </div>
+        {pv && (
+          <p className="cat-price">
+            <span className="cat-price-now">
+              {pv.isMrpOnly ? <span className="cat-price-label">MRP </span> : pv.was && <span className="cat-sr">Offer price </span>}
+              {formatINR(pv.now)}
+            </span>
+            {pv.was && (
+              <s className="cat-price-was">
+                <span className="cat-sr">MRP </span>
+                {formatINR(pv.was)}
+              </s>
+            )}
+            {pv.was && <span className="cat-price-save">Save {formatINR(pv.was - pv.now)}</span>}
+          </p>
+        )}
+        <ColorSwatches variants={p.variants} value={color} onChange={setColor} size="lg" productLabel={p.label} className="cat-swatches" />
+        {showSpec && p.spec && <p className="cat-product-spec">{p.spec}</p>}
+        {showPoints && p.points.length > 0 && (
+          <ul className="cat-ticks cat-ticks-sm">
+            {p.points.map((pt, i) => (
+              <li key={i}>
+                <I.check />
+                {pt}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="cat-product-actions">
+          <button type="button" className="cat-btn cat-btn-quiet" onClick={() => onShare(p.id, p.label)}>
+            <I.share /> Share
+          </button>
+          {data.contact.whatsapp && (
+            <a className="cat-btn" href={waHref(data.contact.whatsapp, `Hi, I'm interested in ${p.label}${colorName ? ` in ${colorName}` : ""}. Please share the price and details.`)} target="_blank" rel="noopener">
+              <I.whatsapp /> Enquiry
+            </a>
+          )}
+        </div>
+      </li>
+  );
+}
+
 function Products({ data, pageUrl, onCopy }: { data: ResolvedCatalog; pageUrl: string; onCopy: (t: string, w: string) => void }) {
   const { showSpec, showPoints, showPrice = true } = data.catalog.products;
   const share = async (slug: string, label: string) => {
@@ -320,54 +390,9 @@ function Products({ data, pageUrl, onCopy }: { data: ResolvedCatalog; pageUrl: s
   };
   return (
     <ul className="cat-products">
-      {data.products.map((p) => {
-        const pv = showPrice ? priceView(p.mrp, p.price) : null;
-        return (
-        <li key={p.id} id={`p-${p.id}`} className="cat-product">
-          <h3 className="cat-product-name">{p.label}</h3>
-          <div className="cat-product-img">
-            <img src={p.src} alt={p.label} loading="lazy" />
-            {pv?.off && <span className="cat-off">{pv.off}% OFF</span>}
-          </div>
-          {pv && (
-            <p className="cat-price">
-              <span className="cat-price-now">
-                {pv.isMrpOnly ? <span className="cat-price-label">MRP </span> : pv.was && <span className="cat-sr">Offer price </span>}
-                {formatINR(pv.now)}
-              </span>
-              {pv.was && (
-                <s className="cat-price-was">
-                  <span className="cat-sr">MRP </span>
-                  {formatINR(pv.was)}
-                </s>
-              )}
-              {pv.was && <span className="cat-price-save">Save {formatINR(pv.was - pv.now)}</span>}
-            </p>
-          )}
-          {showSpec && p.spec && <p className="cat-product-spec">{p.spec}</p>}
-          {showPoints && p.points.length > 0 && (
-            <ul className="cat-ticks cat-ticks-sm">
-              {p.points.map((pt, i) => (
-                <li key={i}>
-                  <I.check />
-                  {pt}
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="cat-product-actions">
-            <button type="button" className="cat-btn cat-btn-quiet" onClick={() => share(p.id, p.label)}>
-              <I.share /> Share
-            </button>
-            {data.contact.whatsapp && (
-              <a className="cat-btn" href={waHref(data.contact.whatsapp, `Hi, I'm interested in ${p.label}. Please share the price and details.`)} target="_blank" rel="noopener">
-                <I.whatsapp /> Enquiry
-              </a>
-            )}
-          </div>
-        </li>
-        );
-      })}
+      {data.products.map((p) => (
+        <CatalogProduct key={p.id} p={p} data={data} showSpec={showSpec} showPoints={showPoints} showPrice={showPrice} onShare={share} />
+      ))}
     </ul>
   );
 }
@@ -513,13 +538,21 @@ function Enquiry({ data }: { data: ResolvedCatalog }) {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const next: Record<string, string> = {};
-    if (!form.name.trim()) next.name = "Please enter your name";
-    if (form.phone.trim() && !/^[+\d\s-]{8,16}$/.test(form.phone.trim())) next.phone = "Enter a valid phone number";
-    if (!form.message.trim()) next.message = "Tell us what you need";
+    const found = {
+      name: check.name(form.name),
+      phone: check.mobile(form.phone),
+      message: check.message(form.message, { min: 5, max: 500, what: "what you need" }),
+    };
+    for (const [k, m] of Object.entries(found)) if (m) next[k] = m;
     setErr(next);
     if (Object.keys(next).length) return;
-    const text = `Enquiry from ${form.name.trim()}${form.phone.trim() ? ` (${form.phone.trim()})` : ""}:\n${form.message.trim()}`;
+    const text = `Enquiry from ${form.name.trim()} (${formatMobile(form.phone)}):\n${form.message.trim()}`;
     window.open(waHref(number, text), "_blank", "noopener");
+  };
+  // Typing in a field clears its own error.
+  const edit = (k: "name" | "phone" | "message", v: string) => {
+    setForm((f) => ({ ...f, [k]: v }));
+    if (err[k]) setErr(({ [k]: _gone, ...rest }) => rest);
   };
   const field = (k: "name" | "phone" | "message", label: string, node: ReactNode) => (
     <label className="cat-field">
@@ -554,9 +587,9 @@ function Enquiry({ data }: { data: ResolvedCatalog }) {
         )}
       </div>
     <form className="cat-form" onSubmit={submit} noValidate>
-      {field("name", "Your name", <input value={form.name} autoComplete="name" maxLength={80} aria-invalid={!!err.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />)}
-      {field("phone", "Phone (optional)", <input value={form.phone} type="tel" inputMode="tel" autoComplete="tel" maxLength={16} aria-invalid={!!err.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />)}
-      {field("message", "What do you need?", <textarea value={form.message} rows={4} maxLength={1000} aria-invalid={!!err.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />)}
+      {field("name", "Your name", <input value={form.name} autoComplete="name" maxLength={60} aria-invalid={!!err.name} onChange={(e) => edit("name", clean("name", e.target.value))} />)}
+      {field("phone", "Mobile number", <MobileInput value={form.phone} invalid={!!err.phone} placeholder="10-digit number" onChange={(d) => edit("phone", d)} />)}
+      {field("message", "What do you need?", <textarea value={form.message} rows={4} maxLength={500} aria-invalid={!!err.message} onChange={(e) => edit("message", clean("message", e.target.value))} />)}
       <button type="submit" className="cat-btn cat-btn-wide">
         <I.whatsapp /> {data.catalog.enquiry.buttonLabel}
       </button>
@@ -600,8 +633,9 @@ function Share({
   };
   const sendWa = (e: FormEvent) => {
     e.preventDefault();
-    const digits = num.replace(/\D/g, "");
-    if (digits.length !== 10) return flash("Enter a 10-digit mobile number");
+    const digits = cleanMobile(num);
+    const problem = check.mobile(digits);
+    if (problem) return flash(problem);
     window.open(waHref(`91${digits}`, `${data.catalog.header.businessName}: ${pageUrl}`), "_blank", "noopener");
   };
 
@@ -633,7 +667,7 @@ function Share({
         <label htmlFor="cat-wa-num">Send to a WhatsApp number</label>
         <div>
           <span>+91</span>
-          <input id="cat-wa-num" type="tel" inputMode="numeric" placeholder="Mobile number" maxLength={14} value={num} onChange={(e) => setNum(e.target.value)} />
+          <input id="cat-wa-num" type="tel" inputMode="numeric" autoComplete="off" placeholder="10-digit mobile number" value={num} onChange={(e) => setNum(cleanMobile(e.target.value))} onPaste={(e) => { e.preventDefault(); setNum(cleanMobile(e.clipboardData.getData("text"))); }} />
           <button type="submit" className="cat-btn">
             <I.whatsapp /> Send
           </button>

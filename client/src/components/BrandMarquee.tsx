@@ -21,9 +21,9 @@ export function BrandMarquee() {
   return (
     <div className="brand-marquee">
       <div className="brand-marquee-head">
-        <span className="brand-marquee-tag">
-          <WrenchIcon size={20} /> Service for every brand
-        </span>
+        <h2 className="brand-marquee-tag">
+          <WrenchIcon size={24} /> Service for every brand
+        </h2>
         <p className="brand-marquee-sub">
           Expert RO water purifier repair and service in Chennai for all brands — Yazh Pure Life, Aquaguard, Kent,
           Pureit and more. Filter change, AMC and genuine spares by trained technicians.
@@ -50,6 +50,7 @@ export function BrandMarquee() {
       <a className="btn btn-light" href="#service">
         <ServiceIcon size={24} />
         <span className="ypl-shine">Book a service for any brand</span>
+        <span aria-hidden="true">→</span>
       </a>
     </div>
   );
