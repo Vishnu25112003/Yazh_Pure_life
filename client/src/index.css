@@ -1180,28 +1180,55 @@ a:focus-visible .ypl-shine {
 
 /* — product prices: offer price in bold, MRP struck through, saving in the teal accent — */
 .ypl-price {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 2px 8px;
+  display: grid;
+  gap: 4px;
   font-variant-numeric: tabular-nums;
   line-height: 1.15;
 }
-.ypl-price-now { font-weight: 700; color: var(--color-text); }
-.ypl-price-label { font-size: 0.75em; font-weight: 600; color: color-mix(in srgb, var(--color-text) 70%, transparent); }
-.ypl-price-was { color: color-mix(in srgb, var(--color-text) 55%, transparent); text-decoration-thickness: 1.5px; }
-.ypl-price-sm .ypl-price-now { font-size: 16px; }
-.ypl-price-sm .ypl-price-was { font-size: 13px; }
-.ypl-price-lg { justify-content: flex-start; gap: 4px 12px; }
-.ypl-price-lg .ypl-price-now { font-size: 28px; font-family: var(--font-heading); letter-spacing: 0.01em; }
-.ypl-price-lg .ypl-price-was { font-size: 17px; }
-.ypl-price-save {
-  flex-basis: 100%;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-accent-2-700);
+.ypl-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
 }
+.ypl-price-now { font-family: var(--font-heading); font-weight: 700; color: var(--color-accent-900); letter-spacing: 0.01em; }
+.ypl-price-label { font-family: var(--font-body, inherit); font-size: 0.7em; font-weight: 600; color: color-mix(in srgb, var(--color-text) 70%, transparent); }
+.ypl-price-was { color: color-mix(in srgb, var(--color-text) 55%, transparent); text-decoration-thickness: 1.5px; }
+
+/* Card: a quiet tinted strip under the spec, centred */
+.ypl-price-sm {
+  justify-items: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: var(--color-accent-100);
+}
+.ypl-price-sm .ypl-price-row { justify-content: center; }
+.ypl-price-sm .ypl-price-now { font-size: 19px; }
+.ypl-price-sm .ypl-price-was { font-size: 13px; }
+
+/* Popup: a price panel with the saving spelled out */
+.ypl-price-lg {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--color-accent-100);
+}
+.ypl-price-lg .ypl-price-row { gap: 4px 12px; }
+.ypl-price-lg .ypl-price-now { font-size: 30px; }
+.ypl-price-lg .ypl-price-was { font-size: 17px; }
+.ypl-price-off {
+  align-self: center;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--color-accent-2-600);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.ypl-price-save {
+  font-size: 14px;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+}
+.ypl-price-save strong { color: var(--color-accent-2-700); }
 .ypl-off-badge {
   position: absolute;
   top: 8px;
@@ -1220,7 +1247,7 @@ a:focus-visible .ypl-shine {
 .ypl-swatches {
   display: grid;
   justify-items: center;
-  gap: 4px;
+  gap: 0;
 }
 .ypl-swatches-lg {
   --swatch-gap: var(--color-bg);

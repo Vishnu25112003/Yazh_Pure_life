@@ -621,11 +621,10 @@ textarea.adm-input {
   .adm-formgrid > .adm-card {
     grid-column: 1;
   }
+  /* Photos & colours can grow long, so it scrolls with the page instead of sticking. */
   .adm-formgrid .adm-side {
     grid-column: 2;
-    grid-row: 1 / span 3;
-    position: sticky;
-    top: calc(var(--adm-top-h) + 16px);
+    grid-row: 1 / span 2;
   }
   .adm-formgrid .adm-img-preview {
     max-width: 100%;

@@ -6,21 +6,23 @@ export function PriceTag({ mrp, price, size = "sm", className = "" }: { mrp?: nu
   if (!v) return null;
   return (
     <div className={`ypl-price ypl-price-${size} ${className}`}>
-      <span className="ypl-price-now">
-        {v.isMrpOnly ? <span className="ypl-price-label">MRP </span> : v.was && <span className="sr-only">Offer price </span>}
-        {formatINR(v.now)}
-      </span>
-      {v.was && (
-        <s className="ypl-price-was">
-          <span className="sr-only">MRP </span>
-          {formatINR(v.was)}
-        </s>
-      )}
-      {size === "lg" && v.was && (
-        <span className="ypl-price-save">
-          You save {formatINR(v.was - v.now)}
-          {v.off ? ` (${v.off}% off)` : ""}
+      <div className="ypl-price-row">
+        <span className="ypl-price-now">
+          {v.isMrpOnly ? <span className="ypl-price-label">MRP </span> : v.was && <span className="sr-only">Offer price </span>}
+          {formatINR(v.now)}
         </span>
+        {v.was && (
+          <s className="ypl-price-was">
+            <span className="sr-only">MRP </span>
+            {formatINR(v.was)}
+          </s>
+        )}
+        {size === "lg" && v.off ? <span className="ypl-price-off">{v.off}% off</span> : null}
+      </div>
+      {size === "lg" && v.was && (
+        <div className="ypl-price-save">
+          You save <strong>{formatINR(v.was - v.now)}</strong>
+        </div>
       )}
     </div>
   );
