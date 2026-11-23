@@ -2,11 +2,11 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { formatINR, priceView } from "../../price";
 import { api } from "../api";
-import { ImageUpload } from "../ImageUpload";
 import { PointsEditor } from "../PointsEditor";
 import { variantErrors, VariantsEditor } from "../VariantsEditor";
 import { PRODUCT_SECTIONS } from "../sections";
 import type { Category, Product, ProductInput } from "../types";
+import type { ProductVariant } from "../../types";
 import { errMsg, Field, fieldErrors, Icons, PageHead, Spinner, Switch, useLoad, useUi } from "../ui";
 
 const slugify = (s: string) =>
@@ -16,6 +16,8 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);
+
+const FIRST_PHOTO: ProductVariant = { name: "", color: "#1f2937", imageUrl: "" };
 
 const EMPTY: ProductInput = { slug: "", label: "", spec: "", imageUrl: "", points: [], isActive: true, mrp: null, price: null, variants: [] };
 
@@ -37,6 +39,8 @@ export function ProductForm({ category }: { category: Category }) {
   const config = useLoad(() => api.get<{ uploadsEnabled: boolean }>("/config"));
 
   const [form, setForm] = useState<ProductInput>(EMPTY);
+  // One list for every photo: entry 1 is the main photo; more entries make it a multi-colour product.
+  const [photos, setPhotos] = useState<ProductVariant[]>([{ ...FIRST_PHOTO }]);
   const [mrpText, setMrpText] = useState("");
   const [priceText, setPriceText] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
@@ -48,6 +52,7 @@ export function ProductForm({ category }: { category: Category }) {
     const p = list.data.find((x) => String(x.id) === id);
     if (p) {
       setForm({ slug: p.slug, label: p.label, spec: p.spec, imageUrl: p.imageUrl, points: p.points, isActive: p.isActive, mrp: p.mrp, price: p.price, variants: p.variants ?? [] });
+      setPhotos(p.variants?.length ? p.variants : [{ ...FIRST_PHOTO, imageUrl: p.imageUrl }]);
       setMrpText(p.mrp ? String(p.mrp) : "");
       setPriceText(p.price ? String(p.price) : "");
     }
@@ -75,11 +80,14 @@ export function ProductForm({ category }: { category: Category }) {
     if (mrp === "bad") local.mrp = "Enter the MRP in whole rupees, e.g. 18500";
     if (price === "bad") local.price = "Enter the offer price in whole rupees, e.g. 12999";
     if (typeof mrp === "number" && typeof price === "number" && price > mrp) local.price = "Offer price can't be more than the MRP";
-    const colourErrors = variantErrors(form.variants);
+    // A single photo without a colour name is a plain product; otherwise every entry is a full colour.
+    const asColours = photos.length > 1 || photos[0].name.trim() !== "";
+    const colourErrors: Record<string, string> = asColours ? variantErrors(photos) : {};
+    if (!photos[0].imageUrl.trim()) colourErrors["variants.0.imageUrl"] = "Upload the product photo";
     Object.assign(local, colourErrors);
     if (Object.keys(local).length) {
       setErrors(local);
-      toast(Object.keys(colourErrors).length ? "Check the colour fields" : "Check the price fields", true);
+      toast(Object.keys(colourErrors).length ? "Check the photos & colours" : "Check the price fields", true);
       return;
     }
     setBusy(true);
@@ -89,7 +97,8 @@ export function ProductForm({ category }: { category: Category }) {
       mrp,
       price,
       points: form.points.map((p) => p.trim()).filter(Boolean),
-      variants: form.variants.map((v) => ({ name: v.name.trim(), color: v.color.toLowerCase(), imageUrl: v.imageUrl.trim() })),
+      imageUrl: photos[0].imageUrl.trim(),
+      variants: asColours ? photos.map((v) => ({ name: v.name.trim(), color: v.color.toLowerCase(), imageUrl: v.imageUrl.trim() })) : [],
     };
     try {
       if (editing) await api.put(`/products/${category}/${id}`, body);
@@ -162,18 +171,25 @@ export function ProductForm({ category }: { category: Category }) {
         </div>
 
         <div className="adm-card adm-side">
-        <Field label="Product image" htmlFor="image" error={errors.imageUrl} hint="Clear photo on a plain background works best (JPG, PNG or WebP, up to 5 MB).">
-          <ImageUpload
-            id="image"
-            value={form.imageUrl}
-            onChange={(url) => set("imageUrl", url)}
+          <h2>Photos &amp; colours</h2>
+          <p className="adm-note">
+            Add the product photo. If this machine comes in more colours, tap “Add another colour” and give each one a name, a swatch
+            and its own photo; customers then tap a colour on the website to see that machine.
+          </p>
+          <VariantsEditor
+            value={photos}
+            onChange={(v) => {
+              setPhotos(v);
+              setErrors((e) => Object.fromEntries(Object.entries(e).filter(([k]) => !k.startsWith("variants") && k !== "imageUrl")));
+            }}
             section={category}
             uploadsEnabled={config.data.uploadsEnabled}
-            invalid={!!errors.imageUrl}
+            errors={{ ...errors, ...(errors.imageUrl ? { "variants.0.imageUrl": errors.imageUrl } : {}) }}
+            productLabel={form.label}
           />
-        </Field>
+          {errors.variants && <span className="adm-error">{errors.variants}</span>}
 
-        <Switch checked={form.isActive} onChange={(v) => set("isActive", v)} label={form.isActive ? "Visible on the website" : "Hidden from the website"} />
+          <Switch checked={form.isActive} onChange={(v) => set("isActive", v)} label={form.isActive ? "Visible on the website" : "Hidden from the website"} />
         </div>
 
         <div className="adm-card">
@@ -200,27 +216,6 @@ export function ProductForm({ category }: { category: Category }) {
             </Field>
           </div>
           <PricePreview mrpText={mrpText} priceText={priceText} />
-        </div>
-
-        <div className="adm-card">
-          <h2>Colours</h2>
-          <p className="adm-note">
-            Only for a machine that comes in more than one colour. Add each colour with its own photo, including the one in the
-            main photo. Customers tap a colour on the website to see that machine. Leave empty for a single-colour product.
-          </p>
-          <VariantsEditor
-            value={form.variants}
-            onChange={(v) => {
-              set("variants", v);
-              setErrors((e) => Object.fromEntries(Object.entries(e).filter(([k]) => !k.startsWith("variants"))));
-            }}
-            mainImage={form.imageUrl}
-            section={category}
-            uploadsEnabled={config.data.uploadsEnabled}
-            errors={errors}
-            productLabel={form.label}
-          />
-          {errors.variants && <span className="adm-error">{errors.variants}</span>}
         </div>
 
         <div className="adm-savebar">

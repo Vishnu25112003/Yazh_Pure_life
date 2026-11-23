@@ -32,7 +32,6 @@ export function variantErrors(list: ProductVariant[]): Record<string, string> {
 export function VariantsEditor({
   value,
   onChange,
-  mainImage,
   section,
   uploadsEnabled,
   errors,
@@ -40,7 +39,6 @@ export function VariantsEditor({
 }: {
   value: ProductVariant[];
   onChange: (v: ProductVariant[]) => void;
-  mainImage: string;
   section: string;
   uploadsEnabled: boolean;
   errors: Record<string, string>;
@@ -62,12 +60,13 @@ export function VariantsEditor({
   const add = () => {
     const used = new Set(value.map((v) => v.color.toLowerCase()));
     const color = STARTERS.find((c) => !used.has(c)) ?? "#64748b";
-    // The first colour usually is the machine in the main photo, so start it with that photo.
-    onChange([...value, { name: "", color, imageUrl: value.length === 0 ? mainImage : "" }]);
+    onChange([...value, { name: "", color, imageUrl: "" }]);
   };
 
   const shown = Math.min(preview, Math.max(0, value.length - 1));
   const ready = value.filter((v) => v.name.trim() && v.imageUrl.trim());
+  // One entry = a single-colour product: just its photo, colour details optional.
+  const single = value.length === 1;
 
   return (
     <div className="adm-variants">
@@ -78,8 +77,9 @@ export function VariantsEditor({
             <div className="adm-variant-top">
             <span className="adm-variant-head">
               <span className="adm-variant-dot" style={{ background: HEX.test(v.color) ? v.color : "transparent" }} aria-hidden="true" />
-              {i === 0 ? "Colour 1 · shown first" : `Colour ${i + 1}`}
+              {single ? "Product photo" : i === 0 ? "Colour 1 · main photo, shown first" : `Colour ${i + 1}`}
             </span>
+            {!single && (
             <div className="adm-variant-btns">
               <button type="button" className="adm-btn adm-btn-sm adm-btn-icon" onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Move colour ${i + 1} up`}>
                 <Icons.up />
@@ -91,11 +91,12 @@ export function VariantsEditor({
                 <Icons.trash />
               </button>
             </div>
+            )}
             </div>
 
             <div className="adm-variant-fields">
               <label className="adm-field">
-                <span className="adm-label">Colour name</span>
+                <span className="adm-label">Colour name{single ? " (optional)" : ""}</span>
                 <input
                   className="adm-input"
                   value={v.name}
@@ -125,7 +126,7 @@ export function VariantsEditor({
             </div>
 
             <div className="adm-field">
-              <span className="adm-label">Photo of this colour</span>
+              <span className="adm-label">{single ? "Photo" : "Photo of this colour"}</span>
               <ImageUpload
                 value={v.imageUrl}
                 onChange={(url) => set(i, { imageUrl: url })}
@@ -141,11 +142,11 @@ export function VariantsEditor({
 
       <div>
         <button type="button" className="adm-btn adm-btn-sm" onClick={add} disabled={value.length >= MAX_VARIANTS}>
-          <Icons.plus /> {value.length ? "Add another colour" : "Add colour"}
+          <Icons.plus /> Add another colour
         </button>
       </div>
 
-      {ready.length > 0 && (
+      {ready.length > 1 && (
         <div className="adm-variant-preview" aria-live="polite">
           <span className="adm-pricepreview-label">On the website</span>
           <div className="adm-variant-preview-body">

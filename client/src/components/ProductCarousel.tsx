@@ -104,7 +104,7 @@ function ProductModal({
         <div>
           <h3 className="m-0">{product.label}</h3>
           <p className="m-0 mt-1 opacity-80">{product.spec}</p>
-          <PriceTag mrp={product.mrp} price={product.price} size="lg" className="mt-2" />
+          <PriceTag mrp={product.mrp} price={product.price} size="lg" className="mt-3" />
           <ColorSwatches
             variants={product.variants}
             value={color}
@@ -114,7 +114,7 @@ function ProductModal({
             className="mt-3"
           />
           {product.points && (
-            <ul className="m-0 mt-2 pl-5 grid gap-1 text-sm">
+            <ul className="m-0 mt-3 pl-5 grid gap-1 text-sm list-disc marker:text-[var(--color-accent-600)]">
               {product.points.map((pt) => (
                 <li key={pt}>{pt}</li>
               ))}
@@ -262,13 +262,13 @@ export function ProductCarousel({
                   {p.label}
                 </div>
                 <div className="text-xs text-center opacity-70 leading-tight">{p.spec}</div>
+                <PriceTag mrp={p.mrp} price={p.price} className="mt-1" />
                 <ColorSwatches
                   variants={p.variants}
                   value={colorOf(p.id)}
                   onChange={(i) => setColor(p.id, i)}
                   productLabel={p.label}
                 />
-                <PriceTag mrp={p.mrp} price={p.price} />
                 <div className="mt-auto pt-1 flex justify-center">
                   <ShareButton product={p} className="chip-link" />
                 </div>
