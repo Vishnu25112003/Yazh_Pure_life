@@ -4,6 +4,7 @@ import { telLink, waLink } from "../data";
 import { useSite } from "../site";
 import type { Product } from "../types";
 import { ChevronRightIcon, CloseIcon, PhoneIcon, ShareIcon, WhatsAppIcon } from "./icons";
+import { ColorSwatches, variantImage } from "./ColorSwatches";
 import { OffBadge, PriceTag } from "./PriceTag";
 import { ProductImage } from "./ProductImage";
 
@@ -53,7 +54,18 @@ function ShareButton({ product, className = "" }: { product: Product; className?
   );
 }
 
-function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
+function ProductModal({
+  product,
+  color,
+  onColor,
+  onClose,
+}: {
+  product: Product;
+  color: number;
+  onColor: (index: number) => void;
+  onClose: () => void;
+}) {
+  const colorName = product.variants?.[color]?.name;
   const { contact: CONTACT } = useSite();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -83,8 +95,8 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         </button>
         <div className="relative">
           <ProductImage
-            label={product.label}
-            src={product.src}
+            label={colorName ? `${product.label} in ${colorName}` : product.label}
+            src={variantImage(product.src, product.variants, color)}
             className="w-full h-[280px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
           />
           <OffBadge mrp={product.mrp} price={product.price} />
@@ -93,6 +105,14 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           <h3 className="m-0">{product.label}</h3>
           <p className="m-0 mt-1 opacity-80">{product.spec}</p>
           <PriceTag mrp={product.mrp} price={product.price} size="lg" className="mt-2" />
+          <ColorSwatches
+            variants={product.variants}
+            value={color}
+            onChange={onColor}
+            size="lg"
+            productLabel={product.label}
+            className="mt-3"
+          />
           {product.points && (
             <ul className="m-0 mt-2 pl-5 grid gap-1 text-sm">
               {product.points.map((pt) => (
@@ -104,7 +124,10 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         <div className="grid gap-[var(--space-2)]">
           <a
             className="btn btn-primary btn-block"
-            href={waLink(CONTACT, `Hi, I am interested in ${product.label} (${product.spec}). Please share more details.`)}
+            href={waLink(
+              CONTACT,
+              `Hi, I am interested in ${product.label}${colorName ? ` in ${colorName}` : ""} (${product.spec}). Please share more details.`,
+            )}
             target="_blank"
             rel="noopener"
           >
@@ -144,6 +167,10 @@ export function ProductCarousel({
     new URLSearchParams(window.location.search).get("product"),
   );
   const selected = products.find((p) => p.id === selectedId) ?? null;
+  // Chosen colour per product, shared by every copy of its card and by the popup.
+  const [colors, setColors] = useState<Record<string, number>>({});
+  const colorOf = (id: string) => colors[id] ?? 0;
+  const setColor = (id: string, index: number) => setColors((c) => ({ ...c, [id]: index }));
 
   const select = (id: string | null) => {
     setSelectedId(id);
@@ -225,8 +252,8 @@ export function ProductCarousel({
               >
                 <div className="relative">
                   <ProductImage
-                    label={p.label}
-                    src={p.src}
+                    label={p.variants?.length ? `${p.label} in ${p.variants[colorOf(p.id)]?.name ?? p.variants[0].name}` : p.label}
+                    src={variantImage(p.src, p.variants, colorOf(p.id))}
                     className="w-full h-[150px] dsk:h-[190px] rounded-md !object-contain bg-white border border-[var(--color-divider)]"
                   />
                   <OffBadge mrp={p.mrp} price={p.price} />
@@ -235,6 +262,12 @@ export function ProductCarousel({
                   {p.label}
                 </div>
                 <div className="text-xs text-center opacity-70 leading-tight">{p.spec}</div>
+                <ColorSwatches
+                  variants={p.variants}
+                  value={colorOf(p.id)}
+                  onChange={(i) => setColor(p.id, i)}
+                  productLabel={p.label}
+                />
                 <PriceTag mrp={p.mrp} price={p.price} />
                 <div className="mt-auto pt-1 flex justify-center">
                   <ShareButton product={p} className="chip-link" />
@@ -263,7 +296,14 @@ export function ProductCarousel({
         </div>
         {children}
       </div>
-      {selected && <ProductModal product={selected} onClose={() => select(null)} />}
+      {selected && (
+        <ProductModal
+          product={selected}
+          color={colorOf(selected.id)}
+          onColor={(i) => setColor(selected.id, i)}
+          onClose={() => select(null)}
+        />
+      )}
     </section>
   );
 }

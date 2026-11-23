@@ -4,6 +4,7 @@ import { formatINR, priceView } from "../../price";
 import { api } from "../api";
 import { ImageUpload } from "../ImageUpload";
 import { PointsEditor } from "../PointsEditor";
+import { variantErrors, VariantsEditor } from "../VariantsEditor";
 import { PRODUCT_SECTIONS } from "../sections";
 import type { Category, Product, ProductInput } from "../types";
 import { errMsg, Field, fieldErrors, Icons, PageHead, Spinner, Switch, useLoad, useUi } from "../ui";
@@ -16,7 +17,7 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 80);
 
-const EMPTY: ProductInput = { slug: "", label: "", spec: "", imageUrl: "", points: [], isActive: true, mrp: null, price: null };
+const EMPTY: ProductInput = { slug: "", label: "", spec: "", imageUrl: "", points: [], isActive: true, mrp: null, price: null, variants: [] };
 
 // Rupee inputs are typed as text so "12,999" or "₹ 12999" both work; anything else is reported, not guessed.
 const toRupees = (s: string): number | null | "bad" => {
@@ -46,7 +47,7 @@ export function ProductForm({ category }: { category: Category }) {
     if (!editing || !list.data) return;
     const p = list.data.find((x) => String(x.id) === id);
     if (p) {
-      setForm({ slug: p.slug, label: p.label, spec: p.spec, imageUrl: p.imageUrl, points: p.points, isActive: p.isActive, mrp: p.mrp, price: p.price });
+      setForm({ slug: p.slug, label: p.label, spec: p.spec, imageUrl: p.imageUrl, points: p.points, isActive: p.isActive, mrp: p.mrp, price: p.price, variants: p.variants ?? [] });
       setMrpText(p.mrp ? String(p.mrp) : "");
       setPriceText(p.price ? String(p.price) : "");
     }
@@ -74,14 +75,22 @@ export function ProductForm({ category }: { category: Category }) {
     if (mrp === "bad") local.mrp = "Enter the MRP in whole rupees, e.g. 18500";
     if (price === "bad") local.price = "Enter the offer price in whole rupees, e.g. 12999";
     if (typeof mrp === "number" && typeof price === "number" && price > mrp) local.price = "Offer price can't be more than the MRP";
+    const colourErrors = variantErrors(form.variants);
+    Object.assign(local, colourErrors);
     if (Object.keys(local).length) {
       setErrors(local);
-      toast("Check the price fields", true);
+      toast(Object.keys(colourErrors).length ? "Check the colour fields" : "Check the price fields", true);
       return;
     }
     setBusy(true);
     setErrors({});
-    const body = { ...form, mrp, price, points: form.points.map((p) => p.trim()).filter(Boolean) };
+    const body = {
+      ...form,
+      mrp,
+      price,
+      points: form.points.map((p) => p.trim()).filter(Boolean),
+      variants: form.variants.map((v) => ({ name: v.name.trim(), color: v.color.toLowerCase(), imageUrl: v.imageUrl.trim() })),
+    };
     try {
       if (editing) await api.put(`/products/${category}/${id}`, body);
       else await api.post(`/products/${category}`, body);
@@ -191,6 +200,27 @@ export function ProductForm({ category }: { category: Category }) {
             </Field>
           </div>
           <PricePreview mrpText={mrpText} priceText={priceText} />
+        </div>
+
+        <div className="adm-card">
+          <h2>Colours</h2>
+          <p className="adm-note">
+            Only for a machine that comes in more than one colour. Add each colour with its own photo, including the one in the
+            main photo. Customers tap a colour on the website to see that machine. Leave empty for a single-colour product.
+          </p>
+          <VariantsEditor
+            value={form.variants}
+            onChange={(v) => {
+              set("variants", v);
+              setErrors((e) => Object.fromEntries(Object.entries(e).filter(([k]) => !k.startsWith("variants"))));
+            }}
+            mainImage={form.imageUrl}
+            section={category}
+            uploadsEnabled={config.data.uploadsEnabled}
+            errors={errors}
+            productLabel={form.label}
+          />
+          {errors.variants && <span className="adm-error">{errors.variants}</span>}
         </div>
 
         <div className="adm-savebar">

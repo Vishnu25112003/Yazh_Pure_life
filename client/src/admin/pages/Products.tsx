@@ -112,6 +112,16 @@ export function ProductsPage({ category }: { category: Category }) {
                   </div>
                   <div className="adm-row-sub">{p.spec}</div>
                   <AdminPrice mrp={p.mrp} price={p.price} />
+                  {p.variants?.length > 0 && (
+                    <div className="adm-row-colors" title={p.variants.map((v) => v.name).join(", ")}>
+                      {p.variants.map((v) => (
+                        <i key={v.name} style={{ background: v.color }} aria-hidden="true" />
+                      ))}
+                      <span>
+                        {p.variants.length} {p.variants.length === 1 ? "colour" : "colours"}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="adm-row-actions">
                   <button

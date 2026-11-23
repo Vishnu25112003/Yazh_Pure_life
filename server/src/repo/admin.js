@@ -10,6 +10,7 @@ const productOut = (r) => ({
   points: r.points ?? [],
   mrp: r.mrp ?? null,
   price: r.price ?? null,
+  variants: r.variants ?? [],
   sortOrder: r.sort_order,
   isActive: r.is_active,
   updatedAt: r.updated_at,
@@ -86,10 +87,10 @@ export async function listProducts(category) {
 export async function createProduct(d) {
   try {
     const { rows } = await query(
-      `INSERT INTO products (slug, category, label, spec, image_url, points, is_active, mrp, price, sort_order)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9, COALESCE((SELECT MAX(sort_order) + 1 FROM products WHERE category = $2), 0))
+      `INSERT INTO products (slug, category, label, spec, image_url, points, is_active, mrp, price, variants, sort_order)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb, COALESCE((SELECT MAX(sort_order) + 1 FROM products WHERE category = $2), 0))
        RETURNING *`,
-      [d.slug, d.category, d.label, d.spec, d.imageUrl, d.points.length ? d.points : null, d.isActive, d.mrp ?? null, d.price ?? null]
+      [d.slug, d.category, d.label, d.spec, d.imageUrl, d.points.length ? d.points : null, d.isActive, d.mrp ?? null, d.price ?? null, JSON.stringify(d.variants ?? [])]
     );
     return productOut(rows[0]);
   } catch (e) {
@@ -98,7 +99,7 @@ export async function createProduct(d) {
 }
 
 // Category is fixed after creation; the slug can change but it is the public share link.
-// Prices are only written when the request includes them, so a client that doesn't know about
+// Prices and colour variants are only written when the request includes them, so a client that doesn't know about
 // prices (e.g. an older admin page) can never wipe them.
 export async function updateProduct(id, d) {
   try {
@@ -106,12 +107,14 @@ export async function updateProduct(id, d) {
       `UPDATE products SET slug=$2, label=$3, spec=$4, image_url=$5, points=$6, is_active=$7,
          mrp   = CASE WHEN $8::boolean  THEN $9::integer  ELSE mrp   END,
          price = CASE WHEN $10::boolean THEN $11::integer ELSE price END,
+         variants = CASE WHEN $12::boolean THEN $13::jsonb ELSE variants END,
          updated_at=now()
        WHERE id = $1 RETURNING *`,
       [
         id, d.slug, d.label, d.spec, d.imageUrl, d.points.length ? d.points : null, d.isActive,
         d.mrp !== undefined, d.mrp ?? null,
         d.price !== undefined, d.price ?? null,
+        d.variants !== undefined, JSON.stringify(d.variants ?? []),
       ]
     );
     return rows[0] ? productOut(rows[0]) : null;

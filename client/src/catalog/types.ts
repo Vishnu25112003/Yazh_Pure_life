@@ -1,3 +1,4 @@
+import type { ProductVariant } from "../types";
 // Shape of a catalogue, mirroring server/src/catalog.js and catalogSchema in server/src/schemas.js.
 
 export type CatalogCategory = "domestic" | "commercial" | "dispenser";
@@ -52,6 +53,7 @@ export interface CatalogProductInput {
   isActive: boolean;
   mrp: number | null;
   price: number | null;
+  variants: ProductVariant[];
 }
 
 /** What GET /api/catalog/:category returns (the admin GET adds isPublished/updatedAt). */

@@ -1,48 +1,58 @@
 import { FormEvent, useState } from "react";
 import { waLink } from "../data";
 import { useSite } from "../site";
+import { check, clean, formatMobile } from "../inputRules";
 import { WrenchIcon } from "./icons";
+import { MobileInput } from "./MobileInput";
 
-type Errors = Partial<Record<"name" | "phone" | "customerId" | "address" | "complaint", string>>;
+type Field = "name" | "phone" | "customerId" | "address" | "complaint";
+type Errors = Partial<Record<Field, string>>;
 
 export function ServiceSection() {
   const { contact } = useSite();
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(""); // 10 digits; +91 is fixed in front
   const [customerId, setCustomerId] = useState("");
   const [address, setAddress] = useState("");
   const [complaint, setComplaint] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
 
+  // Typing in a field clears its own error.
+  const edit = (field: Field, setter: (v: string) => void) => (v: string) => {
+    setter(v);
+    if (errors[field]) setErrors(({ [field]: _gone, ...rest }) => rest);
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const nextErrors: Errors = {};
-    if (name.trim().length < 2 || name.trim().length > 60) {
-      nextErrors.name = "Enter your name (2-60 characters).";
-    }
-    if (!/^[6-9]\d{9}$/.test(phone.trim())) {
-      nextErrors.phone = "Enter a valid 10-digit mobile number.";
-    }
-    if (customerId.trim().length < 1 || customerId.trim().length > 30) {
-      nextErrors.customerId = "Enter your customer ID (up to 30 characters).";
-    }
-    if (address.trim().length < 5 || address.trim().length > 250) {
-      nextErrors.address = "Enter your address (5-250 characters).";
-    }
-    if (complaint.trim().length < 5 || complaint.trim().length > 200) {
-      nextErrors.complaint = "Describe the issue (5-200 characters).";
-    }
+    const found: Errors = {
+      name: check.name(name),
+      phone: check.mobile(phone),
+      customerId: check.customerId(customerId),
+      address: check.address(address),
+      complaint: check.message(complaint, { min: 10, max: 300, what: "the problem" }),
+    };
+    const nextErrors = Object.fromEntries(Object.entries(found).filter(([, m]) => m)) as Errors;
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
+      const first = Object.keys(nextErrors)[0];
+      document.getElementById(`svc-${first}`)?.focus();
       return;
     }
 
-    const message = `New service request from website:\nName: ${name.trim()}\nMobile: ${phone.trim()}\nCustomer ID: ${customerId.trim()}\nAddress: ${address.trim()}\nComplaint: ${complaint.trim()}`;
-    window.open(waLink(contact, message), "_blank");
+    const message = `New service request from website:\nName: ${name.trim()}\nMobile: ${formatMobile(phone)}\nCustomer ID: ${customerId.trim()}\nAddress: ${address.trim()}\nComplaint: ${complaint.trim()}`;
+    window.open(waLink(contact, message), "_blank", "noopener");
     setSent(true);
     setErrors({});
   };
+
+  const err = (f: Field) =>
+    errors[f] ? (
+      <div id={`svc-${f}-err`} className="ypl-field-error" role="alert">
+        {errors[f]}
+      </div>
+    ) : null;
 
   return (
     <section id="service" className="grid gap-[var(--space-3)]">
@@ -65,77 +75,79 @@ export function ServiceSection() {
           onSubmit={handleSubmit}
         >
           <div className="field">
-            <label>Name</label>
+            <label htmlFor="svc-name">Name</label>
             <input
+              id="svc-name"
               className="input"
               type="text"
+              autoComplete="name"
+              maxLength={60}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? "svc-name-err" : undefined}
+              onChange={(e) => edit("name", setName)(clean("name", e.target.value))}
               placeholder="Your name"
             />
-            {errors.name && (
-              <div className="text-[12px] mt-1" style={{ color: "var(--color-accent-900)" }}>
-                {errors.name}
-              </div>
-            )}
+            {err("name")}
           </div>
           <div className="field">
-            <label>Mobile number</label>
-            <input
-              className="input"
-              type="tel"
+            <label htmlFor="svc-phone">Mobile number</label>
+            <MobileInput
+              id="svc-phone"
+              inputClassName="input"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="10-digit mobile number"
+              invalid={!!errors.phone}
+              describedBy={errors.phone ? "svc-phone-err" : undefined}
+              onChange={edit("phone", setPhone)}
             />
-            {errors.phone && (
-              <div className="text-[12px] mt-1" style={{ color: "var(--color-accent-900)" }}>
-                {errors.phone}
-              </div>
-            )}
+            {err("phone")}
           </div>
           <div className="field">
-            <label>Customer ID</label>
+            <label htmlFor="svc-customerId">Customer ID</label>
             <input
+              id="svc-customerId"
               className="input"
               type="text"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              maxLength={30}
               value={customerId}
-              onChange={(e) => setCustomerId(e.target.value)}
-              placeholder="Your customer ID"
+              aria-invalid={!!errors.customerId}
+              aria-describedby={errors.customerId ? "svc-customerId-err" : undefined}
+              onChange={(e) => edit("customerId", setCustomerId)(clean("customerId", e.target.value))}
+              placeholder="e.g. YPL-10234"
             />
-            {errors.customerId && (
-              <div className="text-[12px] mt-1" style={{ color: "var(--color-accent-900)" }}>
-                {errors.customerId}
-              </div>
-            )}
+            {err("customerId")}
           </div>
           <div className="field">
-            <label>Address</label>
+            <label htmlFor="svc-address">Address</label>
             <textarea
+              id="svc-address"
               className="input dsk:!min-h-[36px] dsk:!h-[36px] dsk:!resize-none"
+              autoComplete="street-address"
+              maxLength={250}
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              aria-invalid={!!errors.address}
+              aria-describedby={errors.address ? "svc-address-err" : undefined}
+              onChange={(e) => edit("address", setAddress)(clean("address", e.target.value))}
               placeholder="House no., street, area, city"
             />
-            {errors.address && (
-              <div className="text-[12px] mt-1" style={{ color: "var(--color-accent-900)" }}>
-                {errors.address}
-              </div>
-            )}
+            {err("address")}
           </div>
           <div className="field dsk:col-span-2">
-            <label>What's the complaint?</label>
+            <label htmlFor="svc-complaint">What's the complaint?</label>
             <textarea
+              id="svc-complaint"
               className="input"
+              maxLength={300}
               value={complaint}
-              onChange={(e) => setComplaint(e.target.value)}
+              aria-invalid={!!errors.complaint}
+              aria-describedby={errors.complaint ? "svc-complaint-err" : undefined}
+              onChange={(e) => edit("complaint", setComplaint)(clean("message", e.target.value))}
               placeholder="E.g. Low water flow from RO unit"
             />
-            {errors.complaint && (
-              <div className="text-[12px] mt-1" style={{ color: "var(--color-accent-900)" }}>
-                {errors.complaint}
-              </div>
-            )}
+            {err("complaint")}
           </div>
           <button type="submit" className="btn btn-primary btn-block dsk:col-span-2">
             Send request on WhatsApp

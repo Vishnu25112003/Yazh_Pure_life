@@ -9,6 +9,7 @@ import { PointsEditor } from "../PointsEditor";
 import { PRODUCT_SECTIONS } from "../sections";
 import type { Category } from "../types";
 import { errMsg, Field, fieldErrors, Icons, PageHead, Spinner, Switch, timeAgo, useLoad, useUi } from "../ui";
+import { cleanByMode } from "../../inputRules";
 
 interface AdminCatalog extends CatalogPayload {
   isPublished: boolean;
@@ -97,9 +98,9 @@ export function CatalogEditor({ category }: { category: Category }) {
   const text = (path: string, label: string, value: string, onChange: (v: string) => void, opts: { hint?: string; placeholder?: string; max?: number; area?: boolean; type?: string; inputMode?: "tel" | "email" | "url" | "numeric" } = {}) => (
     <Field label={label} htmlFor={`cf-${path}`} error={err(path)} hint={opts.hint}>
       {opts.area ? (
-        <textarea id={`cf-${path}`} className="adm-input" rows={5} value={value} maxLength={opts.max} placeholder={opts.placeholder} aria-invalid={!!err(path)} onChange={(e) => onChange(e.target.value)} />
+        <textarea id={`cf-${path}`} className="adm-input" rows={5} value={value} maxLength={opts.max} placeholder={opts.placeholder} aria-invalid={!!err(path)} onChange={(e) => onChange(cleanByMode(undefined, e.target.value))} />
       ) : (
-        <input id={`cf-${path}`} className="adm-input" type={opts.type ?? "text"} inputMode={opts.inputMode} value={value} maxLength={opts.max} placeholder={opts.placeholder} aria-invalid={!!err(path)} onChange={(e) => onChange(e.target.value)} />
+        <input id={`cf-${path}`} className="adm-input" type={opts.type ?? "text"} inputMode={opts.inputMode} value={value} maxLength={opts.max} placeholder={opts.placeholder} aria-invalid={!!err(path)} onChange={(e) => onChange(cleanByMode(opts.inputMode, e.target.value))} />
       )}
     </Field>
   );

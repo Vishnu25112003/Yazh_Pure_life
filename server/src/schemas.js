@@ -1,12 +1,25 @@
 import { z } from "zod";
 import { SECTION_KEYS } from "./catalog.js";
 
+// Hidden characters used to disguise text: controls, zero-width, bidi overrides, BOM. Newlines and tabs are kept.
+const INVISIBLE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\u00AD\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g;
+// HTML tags, script links and inline event handlers have no place in any text field of this site.
+const CODE_LIKE = /<\s*\/?\s*[a-z!?]|javascript\s*:|vbscript\s*:|data\s*:\s*text\/html|\bon[a-z]+\s*=/i;
+const CODE_MSG = "Remove code-like text (HTML tags or scripts)";
+const scrub = (v) => v.replace(INVISIBLE, "");
+
 const text = (label, max) =>
   z
     .string({ error: `${label} is required` })
-    .trim()
-    .min(1, `${label} is required`)
-    .max(max, `${label} must be at most ${max} characters`);
+    .transform(scrub)
+    .pipe(
+      z
+        .string()
+        .trim()
+        .min(1, `${label} is required`)
+        .max(max, `${label} must be at most ${max} characters`)
+        .refine((v) => !CODE_LIKE.test(v), `${label}: ${CODE_MSG}`)
+    );
 
 const httpUrl = (label) =>
   text(label, 2000).refine((v) => /^https?:\/\/\S+$/i.test(v), `${label} must be a full http(s) link`);
@@ -51,18 +64,38 @@ const rupees = (label) =>
     .nullable()
     .optional();
 
+// Colour variants: each colour has its own swatch and photo. Leaving the field out keeps what is stored.
+const variant = z.object({
+  name: text("Colour name", 40),
+  color: z.string().trim().regex(/^#[0-9a-f]{6}$/i, "Pick a swatch colour"),
+  imageUrl,
+});
+const variants = z
+  .array(variant)
+  .max(12, "At most 12 colours")
+  .superRefine((list, ctx) => {
+    const seen = new Set();
+    list.forEach((v, i) => {
+      const k = v.name.toLowerCase();
+      if (seen.has(k)) ctx.addIssue({ code: "custom", path: [i, "name"], message: "Each colour needs a different name" });
+      seen.add(k);
+    });
+  })
+  .optional();
+
 const productFields = z.object({
   slug: text("Slug", 80).refine((v) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v), "Use lowercase letters, numbers and hyphens only"),
   label: text("Name", 120),
   spec: text("Spec line", 200),
   imageUrl,
   points: z
-    .array(z.string().trim().min(1, "Point cannot be empty").max(160, "Point must be at most 160 characters"))
+    .array(text("Point", 160))
     .max(12, "At most 12 key points")
     .default([]),
   isActive,
   mrp: rupees("MRP"),
   price: rupees("Offer price"),
+  variants,
 });
 
 const offerNotAboveMrp = (d, ctx) => {
@@ -88,7 +121,18 @@ export const reorderSchema = z.object({
 
 // ---- Catalogue (per-category digital card) ----
 // Optional text: empty string means "not set" (and, for contact fields, "use the site-wide value").
-const opt = (label, max) => z.string().trim().max(max, `${label} must be at most ${max} characters`).default("");
+const opt = (label, max) =>
+  z
+    .string()
+    .transform(scrub)
+    .pipe(
+      z
+        .string()
+        .trim()
+        .max(max, `${label} must be at most ${max} characters`)
+        .refine((v) => !CODE_LIKE.test(v), `${label}: ${CODE_MSG}`)
+    )
+    .default("");
 const optUrl = (label) => opt(label, 2000).refine((v) => v === "" || /^https?:\/\/\S+$/i.test(v), `${label} must be a full http(s) link`);
 const optImage = (label) =>
   opt(label, 2000).refine((v) => v === "" || /^\/assets\/\S+$/.test(v) || /^https?:\/\/\S+$/i.test(v), `${label} must be an uploaded file or a valid link`);
