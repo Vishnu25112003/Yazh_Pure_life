@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSite } from "../site";
 import { ChevronRightIcon, CloseIcon } from "./icons";
+import { FadeImg } from "./FadeImg";
 
 export function GallerySection() {
   const { gallery: GALLERY } = useSite();
@@ -52,7 +53,7 @@ export function GallerySection() {
                 aria-hidden={isCopy || undefined}
                 tabIndex={isCopy ? -1 : undefined}
               >
-                <img src={item.src} alt={isCopy ? "" : `${item.name} RO water purifier`} loading="lazy" />
+                <FadeImg src={item.src} alt={isCopy ? "" : `${item.name} RO water purifier`} loading="lazy" decoding="async" />
                 <span className="gallery-caption">{item.name}</span>
               </button>
             );
@@ -66,7 +67,7 @@ export function GallerySection() {
             <button type="button" className="menu-toggle gallery-close" aria-label="Close" onClick={() => setOpenIndex(null)}>
               <CloseIcon />
             </button>
-            <img src={open.src} alt={`${open.name} RO water purifier`} className="gallery-lightbox-img" />
+            <FadeImg key={open.src} src={open.src} alt={`${open.name} RO water purifier`} className="gallery-lightbox-img" />
             <div className="gallery-lightbox-bar">
               <button type="button" className="gallery-nav" aria-label="Previous photo" onClick={() => step(-1)}>
                 <ChevronRightIcon className="gallery-prev-icon" />

@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { hideBoot } from "./boot";
 import type { SiteData } from "./types";
 
 const SiteContext = createContext<SiteData | null>(null);
@@ -9,7 +10,6 @@ const RETRY_DELAYS_MS = [1500, 4000, 9000, 15000, 20000];
 export function SiteProvider({ children }: { children: ReactNode }) {
   const [site, setSite] = useState<SiteData | null>(null);
   const [failed, setFailed] = useState(false);
-  const [retrying, setRetrying] = useState(false);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -26,13 +26,17 @@ export function SiteProvider({ children }: { children: ReactNode }) {
             setFailed(true);
             return;
           }
-          setRetrying(true);
           await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt]));
         }
       }
     })();
     return () => ctrl.abort();
   }, []);
+
+  // Fade the opening screen out once the page (or the error message) has rendered behind it.
+  useEffect(() => {
+    if (site || failed) hideBoot();
+  }, [site, failed]);
 
   if (failed) {
     return (
@@ -49,13 +53,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (!site) {
-    return (
-      <div className="min-h-screen grid place-items-center p-6 text-center" style={{ background: "var(--color-bg)" }} aria-busy="true">
-        {retrying && <p style={{ opacity: 0.7 }}>Loading Yazh Pure Life… the server is waking up, one moment.</p>}
-      </div>
-    );
-  }
+  // While loading, the opening screen from index.html stays on top.
+  if (!site) return null;
   return <SiteContext.Provider value={site}>{children}</SiteContext.Provider>;
 }
 

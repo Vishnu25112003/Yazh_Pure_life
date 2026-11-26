@@ -104,7 +104,7 @@ export function Footer() {
   return (
     <footer
       className="ypl-footer text-white pb-20 dsk:pb-0"
-      style={{ background: "linear-gradient(160deg, var(--color-accent-900), var(--color-accent-2-900))" }}
+      style={{ background: "var(--color-accent-800)" }}
     >
       <div className="max-w-[640px] dsk:max-w-[1240px] mx-auto py-[var(--space-6)] px-[var(--space-4)] grid gap-[var(--space-4)]">
         <div className="footer-hero">

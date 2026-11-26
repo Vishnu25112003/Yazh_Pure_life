@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type R
 import { I, LINK_ICON } from "./icons";
 import { formatINR, priceView } from "../price";
 import { ColorSwatches, variantImage } from "../components/ColorSwatches";
+import { FadeImg } from "../components/FadeImg";
 import { MobileInput } from "../components/MobileInput";
 import { check, clean, cleanMobile, formatMobile } from "../inputRules";
 import { buildVCard, telHref, waHref, youtubeId, type ResolvedCatalog } from "./resolve";
@@ -330,7 +331,7 @@ function CatalogProduct({
       <li id={`p-${p.id}`} className="cat-product">
         <h3 className="cat-product-name">{p.label}</h3>
         <div className="cat-product-img">
-          <img src={variantImage(p.src, p.variants, color)} alt={colorName ? `${p.label} in ${colorName}` : p.label} loading="lazy" />
+          <FadeImg src={variantImage(p.src, p.variants, color)} alt={colorName ? `${p.label} in ${colorName}` : p.label} loading="lazy" decoding="async" />
           {pv?.off && <span className="cat-off">{pv.off}% OFF</span>}
         </div>
         {pv && (
@@ -464,7 +465,7 @@ function Gallery({ data }: { data: ResolvedCatalog }) {
         {pics.map((g, i) => (
           <li key={g.src + i}>
             <button type="button" onClick={() => setOpen(i)} aria-label={`Open photo: ${g.name}`}>
-              <img src={g.src} alt={g.name} loading="lazy" />
+              <FadeImg src={g.src} alt={g.name} loading="lazy" decoding="async" />
             </button>
           </li>
         ))}

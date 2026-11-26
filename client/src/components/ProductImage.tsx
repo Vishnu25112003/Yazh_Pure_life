@@ -1,3 +1,5 @@
+import { FadeImg } from "./FadeImg";
+
 type ProductImageProps = {
   label: string;
   src?: string;
@@ -6,7 +8,7 @@ type ProductImageProps = {
 
 export function ProductImage({ label, src, className = "" }: ProductImageProps) {
   if (src) {
-    return <img src={src} alt={label} className={`object-cover ${className}`} />;
+    return <FadeImg src={src} alt={label} decoding="async" className={`object-cover ${className}`} />;
   }
   return (
     <div

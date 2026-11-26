@@ -129,8 +129,39 @@
     </script>
     <!-- Elfsight Google Reviews -->
     <script src="https://elfsightcdn.com/platform.js" async></script>
+    <!-- Opening screen: shown instantly, before any script loads; removed by hideBoot() in src/boot.ts. -->
+    <link rel="preload" as="image" href="/assets/logo-loader.webp" />
+    <style>
+      #ypl-boot{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#f3f7fc;transition:opacity .4s ease,visibility .4s}
+      #ypl-boot.is-done{opacity:0;visibility:hidden;pointer-events:none}
+      #ypl-boot .boot-inner{display:grid;justify-items:center;gap:22px;padding:24px}
+      #ypl-boot img{display:block;width:min(240px,62vw);height:auto;border-radius:12px}
+      #ypl-boot .boot-bar{position:relative;width:min(168px,46vw);height:3px;border-radius:3px;overflow:hidden;background:rgba(2,61,117,.14)}
+      #ypl-boot .boot-bar::before{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;border-radius:inherit;background:#023d75;animation:ypl-boot-slide 1.2s cubic-bezier(.65,0,.35,1) infinite}
+      #ypl-boot .boot-note{margin:0;max-width:280px;min-height:2.8em;text-align:center;font:500 14px/1.4 "Barlow",system-ui,sans-serif;color:#4a5b70;opacity:0;transition:opacity .5s ease}
+      #ypl-boot.is-slow .boot-note{opacity:1}
+      #ypl-boot .boot-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+      @keyframes ypl-boot-slide{from{transform:translateX(-100%)}to{transform:translateX(265%)}}
+      @keyframes ypl-boot-pulse{50%{opacity:.35}}
+      @media (prefers-reduced-motion:reduce){#ypl-boot .boot-bar::before{width:100%;animation:ypl-boot-pulse 1.8s ease-in-out infinite}}
+    </style>
   </head>
   <body>
+    <div id="ypl-boot" role="status" aria-live="polite">
+      <div class="boot-inner">
+        <img src="/assets/logo-loader.webp" alt="" width="480" height="114" />
+        <div class="boot-bar" aria-hidden="true"></div>
+        <p class="boot-note">Connecting to our server… this can take a few seconds.</p>
+        <span class="boot-sr">Loading Yazh Pure Life</span>
+      </div>
+    </div>
+    <script>
+      // Only mention the wait when it is actually long (a sleeping server can take a while to wake).
+      setTimeout(function () {
+        var b = document.getElementById("ypl-boot");
+        if (b && !b.classList.contains("is-done")) b.classList.add("is-slow");
+      }, 4000);
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
