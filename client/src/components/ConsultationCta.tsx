@@ -7,7 +7,7 @@ export function ConsultationCta() {
     <div
       id="consultation"
       className="text-white"
-      style={{ background: "linear-gradient(135deg, var(--color-accent-900), var(--color-accent-600) 55%, var(--color-accent-500))" }}
+      style={{ background: "var(--color-accent-800)" }}
     >
       <div className="max-w-[640px] dsk:max-w-[1240px] mx-auto pt-[calc(var(--space-8)*1.2)] pb-[calc(var(--space-8)*1.2)] px-[var(--space-4)] text-center grid gap-[var(--space-3)] justify-items-center">
         <h2 className="m-0 text-[26px]">Still not sure which system you need?</h2>
